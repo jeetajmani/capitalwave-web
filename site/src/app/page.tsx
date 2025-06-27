@@ -5,7 +5,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 // import Image from "next/image"
-import { motion } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { AnimatedFlashButton } from "@/components/ui/flashbutton"
 // import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
@@ -49,77 +49,92 @@ export default function Page() {
   return (
     <div className="flex min-h-[100dvh] flex-col">
       <header
-        className={`sticky top-0 z-50 w-full backdrop-blur-lg transition-all duration-300 ${isScrolled ? "bg-background/80 shadow-sm" : "bg-transparent"}`}
+        className={`sticky top-0 z-50 w-full transition-all duration-300 ${isScrolled ? "bg-background/80 shadow-sm" : "bg-transparent"}`}
       >
-        <div className="container mx-auto px-4 sm:px-6 md:px-0 flex h-16 items-center justify-between">
-          <div className="flex items-center gap-2 font-bold">
-            <span>CAPITAL WAVE</span>
-          </div>
-          <nav className="hidden md:flex gap-8 flex-1 justify-center">
-            <Link
-              href="/services"
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-            >
-              Services
-            </Link>
-            <Link
-              href="/roster"
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-            >
-              Roster
-            </Link>
-            <Link
-              href="/events"
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-            >
-              Events
-            </Link>
-            <Link
-              href="/gallery"
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-            >
-              Gallery
-            </Link>
-          </nav>
-          <div className="hidden md:flex gap-4 items-center">
-            <AnimatedFlashButton text="Book Now" className="rounded-full" variant="outline"/>
-          </div>
-          <div className="flex items-center gap-4 md:hidden">
-            <Button variant="ghost" size="icon" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-              {mobileMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
-              <span className="sr-only">Toggle menu</span>
-            </Button>
+        <div className="my-4">
+          <div className="container mx-auto px-4 sm:px-6 md:px-0 flex h-16 items-center justify-between">
+            <div className="flex-1 flex items-center gap-2 font-bold text-2xl text-foreground">
+              <Link href="/" className="flex items-center">
+                <span>CAPITAL WAVE</span>
+              </Link>
+            </div>
+            <nav className="hidden md:flex gap-12 flex-1 justify-center text-md">
+              <Link
+                href="/services"
+                className="font-medium text-muted-foreground transition-colors hover:text-foreground"
+              >
+                Services
+              </Link>
+              <Link
+                href="/roster"
+                className="font-medium text-muted-foreground transition-colors hover:text-foreground"
+              >
+                Roster
+              </Link>
+              <Link
+                href="/events"
+                className="font-medium text-muted-foreground transition-colors hover:text-foreground"
+              >
+                Events
+              </Link>
+              <Link
+                href="/gallery"
+                className="font-medium text-muted-foreground transition-colors hover:text-foreground"
+              >
+                Gallery
+              </Link>
+            </nav>
+            <div className="hidden md:flex flex-1 gap-4 items-center justify-end">
+              <Link href="/book">
+                <AnimatedFlashButton text="Book Now" className="rounded-full" variant="outline" />
+              </Link>
+            </div>
+            <div className="flex items-center gap-4 md:hidden">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="cursor-pointer"
+              >
+                {mobileMenuOpen ? <X className="size-8" /> : <Menu className="size-8" />}
+                <span className="sr-only">Toggle menu</span>
+              </Button>
+            </div>
           </div>
         </div>
         {/* Mobile menu */}
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="md:hidden absolute top-16 inset-x-0 bg-background/95 backdrop-blur-lg border-b"
-          >
-            <div className="container py-4 px-4 flex flex-col gap-4">
-              <Link href="/services" className="py-2 text-sm font-medium" onClick={() => setMobileMenuOpen(false)}>
-                Services
-              </Link>
-              <Link href="/roster" className="py-2 text-sm font-medium" onClick={() => setMobileMenuOpen(false)}>
-                Roster
-              </Link>
-              <Link href="/events" className="py-2 text-sm font-medium" onClick={() => setMobileMenuOpen(false)}>
-                Events
-              </Link>
-              <Link href="/gallery" className="py-2 text-sm font-medium" onClick={() => setMobileMenuOpen(false)}>
-                Gallery
-              </Link>
-              <div className="flex flex-col gap-2 pt-2 border-t">
-                <Button className="rounded-full">
-                  Book Now
-                </Button>
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              className="md:hidden absolute top-16 inset-x-0 bg-background/95 backdrop-blur-lg"
+            >
+              <div className="container py-4 px-4 flex flex-col gap-6 text-4xl items-center justify-center">
+                <Link href="/services" className="py-2 font-medium text-muted-foreground transition-colors hover:text-foreground" onClick={() => setMobileMenuOpen(false)}>
+                  Services
+                </Link>
+                <Link href="/roster" className="py-2 font-medium text-muted-foreground transition-colors hover:text-foreground" onClick={() => setMobileMenuOpen(false)}>
+                  Roster
+                </Link>
+                <Link href="/events" className="py-2 font-medium text-muted-foreground transition-colors hover:text-foreground" onClick={() => setMobileMenuOpen(false)}>
+                  Events
+                </Link>
+                <Link href="/gallery" className="py-2 font-medium text-muted-foreground transition-colors hover:text-foreground" onClick={() => setMobileMenuOpen(false)}>
+                  Gallery
+                </Link>
+                <div className="flex flex-col gap-2 pt-2 items-center">
+                  <AnimatedFlashButton
+                    text="Book Now"
+                    className="rounded-full px-10 py-9 text-3xl"
+                    variant="outline"
+                  />
+                </div>
               </div>
-            </div>
-          </motion.div>
-        )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
     </div>
   )

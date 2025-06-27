@@ -7,8 +7,8 @@ import { ThemeProvider } from "@/components/theme-provider"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "SaaSify - Streamline Your Workflow",
-  description: "Boost productivity, reduce costs, and scale your business with our all-in-one SaaS platform.",
+  title: "Capital Wave Studio",
+  description: "Elevate your sound with Capital Wave Studio, Victoria's premier music studio turned record label. Specializing in recording, music production, mixing, mastering, and artist development, we help you create and release your music with professional quality. Join us to transform your musical vision into reality.",
 }
 
 export default function RootLayout({
