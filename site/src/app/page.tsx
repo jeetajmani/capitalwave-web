@@ -2,13 +2,12 @@
 
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import Link from "next/link"
 // import Image from "next/image"
 import { AnimatePresence, motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { AnimatedFlashButton } from "@/components/ui/flashbutton"
-// import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import {
   Menu,
   X,
@@ -16,44 +15,16 @@ import {
 
 
 export default function Page() {
-  const [isScrolled, setIsScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 10) {
-        setIsScrolled(true)
-      } else {
-        setIsScrolled(false)
-      }
-    }
-
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
-
-  // const container = {
-  //   hidden: { opacity: 0 },
-  //   show: {
-  //     opacity: 1,
-  //     transition: {
-  //       staggerChildren: 0.1,
-  //     },
-  //   },
-  // }
-
-  // const item = {
-  //   hidden: { opacity: 0, y: 20 },
-  //   show: { opacity: 1, y: 0 },
-  // }
   return (
     <div className="flex min-h-[100dvh] flex-col">
       <header
-        className={`sticky top-0 z-50 w-full transition-all duration-300 ${isScrolled ? "bg-background/80 shadow-sm" : "bg-transparent"}`}
+        className="sticky top-0 z-50 w-full transition-all duration-300 bg-black/20"
       >
         <div className="my-4">
           <div className="container mx-auto px-4 sm:px-6 md:px-0 flex h-16 items-center justify-between">
-            <div className="flex-1 flex items-center gap-2 font-bold text-2xl text-foreground">
+            <div className="flex-1 flex items-center gap-2 font-bold text-2xl text-foreground mx-4">
               <Link href="/" className="flex items-center">
                 <span>CAPITAL WAVE</span>
               </Link>
@@ -108,10 +79,10 @@ export default function Page() {
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              className="md:hidden absolute top-16 inset-x-0 bg-background/95 backdrop-blur-lg"
+              exit={{ opacity: 0, y:20 }}
+              className="md:hidden absolute left-0 right-0 top-full bg-black/20"
             >
-              <div className="container py-4 px-4 flex flex-col gap-6 text-4xl items-center justify-center">
+              <div className="container pt-2 pb-12 px-4 flex flex-col gap-6 text-4xl items-center justify-center">
                 <Link href="/services" className="py-2 font-medium text-muted-foreground transition-colors hover:text-foreground" onClick={() => setMobileMenuOpen(false)}>
                   Services
                 </Link>
