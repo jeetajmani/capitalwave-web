@@ -104,7 +104,7 @@ const Header = () => {
                         className="md:hidden fixed left-0 right-0 w-full max-w-xl bg-black/40 backdrop-blur-sm z-50 shadow-md border-b border-neutral-800 mx-auto"
                         style={{ top: headerHeight }}
                     >
-                        <div className="pt-5 pb-12 px-4 flex flex-col gap-6 text-4xl items-center font-normal">
+                        <div className="pt-5 pb-12 px-4 flex flex-col gap-8 text-4xl items-center font-normal">
                             <Link href="/services" className="py-2 text-muted-foreground transition-colors hover:text-foreground" onClick={() => setMobileMenuOpen(false)}>
                                 Services
                             </Link>
