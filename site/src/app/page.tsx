@@ -29,7 +29,7 @@ export default function Page() {
                 <span>CAPITAL WAVE</span>
               </Link>
             </div>
-            <nav className="hidden md:flex gap-12 flex-1 justify-center text-md">
+            <nav className="hidden md:flex gap-6 md:gap-8 lg:gap-12 justify-center text-md">
               <Link
                 href="/services"
                 className="font-medium text-muted-foreground transition-colors hover:text-foreground"
@@ -82,7 +82,7 @@ export default function Page() {
               exit={{ opacity: 0, y:20 }}
               className="md:hidden absolute left-0 right-0 top-full bg-black/20"
             >
-              <div className="container pt-2 pb-12 px-4 flex flex-col gap-6 text-4xl items-center justify-center">
+              <div className="w-full max-w-xl mx-auto pt-2 pb-12 px-4 flex flex-col gap-6 text-4xl items-center justify-center">
                 <Link href="/services" className="py-2 font-medium text-muted-foreground transition-colors hover:text-foreground" onClick={() => setMobileMenuOpen(false)}>
                   Services
                 </Link>
