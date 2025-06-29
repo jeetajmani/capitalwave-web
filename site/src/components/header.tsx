@@ -15,68 +15,66 @@ const Header = () => {
 
     return (
         <header className="sticky top-0 z-50 w-full transition-all duration-300 bg-black/40 backdrop-blur-sm">
-            <div className="p-4">
-                <motion.div
-                    initial={{ opacity: 0, y: -15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 1.0, ease: "easeOut" }}
-                >
-                    <div className="container mx-auto px-4 sm:px-6 md:px-0 flex h-16 items-center justify-between">
-                        <div className="flex-1 flex items-center gap-2 font-bold text-2xl text-foreground mx-4">
-                            <Link href="/" className="flex items-center">
-                                <span>CAPITAL WAVE</span>
-                            </Link>
-                        </div>
-                        <nav className="hidden md:flex gap-6 md:gap-8 lg:gap-12 justify-center text-md">
-                            <Link
-                                href="/services"
-                                className="font-medium text-muted-foreground transition-colors hover:text-foreground"
-                            >
-                                Services
-                            </Link>
-                            <Link
-                                href="/roster"
-                                className="font-medium text-muted-foreground transition-colors hover:text-foreground"
-                            >
-                                Roster
-                            </Link>
-                            <Link
-                                href="/events"
-                                className="font-medium text-muted-foreground transition-colors hover:text-foreground"
-                            >
-                                Events
-                            </Link>
-                            <Link
-                                href="/gallery"
-                                className="font-medium text-muted-foreground transition-colors hover:text-foreground"
-                            >
-                                Gallery
-                            </Link>
-                        </nav>
-                        <div className="hidden md:flex flex-1 gap-4 items-center justify-end">
-                            <Link href="/book">
-                                <AnimatedFlashButton text="Book Now" className="rounded-full" variant="outline" />
-                            </Link>
-                        </div>
-                        <div className="flex items-center gap-4 md:hidden">
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                                className="cursor-pointer"
-                            >
-                                {mobileMenuOpen ? <X className="size-8" /> : <Menu className="size-8" />}
-                                <span className="sr-only">Toggle menu</span>
-                            </Button>
-                        </div>
+            <motion.div
+                initial={{ opacity: 0, y: -15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1.0, ease: "easeOut" }}
+            >
+                <div className="container mx-auto px-6 py-6 grid grid-cols-3 items-center">
+                    <div className="font-bold text-2xl text-foreground">
+                        <Link href="/">
+                            <span className="whitespace-nowrap">CAPITAL WAVE</span>
+                        </Link>
                     </div>
-                </motion.div>
-            </div>
+                    <nav className="hidden md:flex gap-6 md:gap-8 lg:gap-12 justify-center text-md mx-auto">
+                        <Link
+                            href="/services"
+                            className="font-medium text-muted-foreground transition-colors hover:text-foreground"
+                        >
+                            Services
+                        </Link>
+                        <Link
+                            href="/roster"
+                            className="font-medium text-muted-foreground transition-colors hover:text-foreground"
+                        >
+                            Roster
+                        </Link>
+                        <Link
+                            href="/events"
+                            className="font-medium text-muted-foreground transition-colors hover:text-foreground"
+                        >
+                            Events
+                        </Link>
+                        <Link
+                            href="/gallery"
+                            className="font-medium text-muted-foreground transition-colors hover:text-foreground"
+                        >
+                            Gallery
+                        </Link>
+                    </nav>
+                    <div className="hidden md:flex flex-1 gap-4 items-center justify-end">
+                        <Link href="/book">
+                            <AnimatedFlashButton text="Book Now" className="rounded-full" variant="outline" />
+                        </Link>
+                    </div>
+                    <div className="flex items-center gap-4 md:hidden col-span-2 col-start-3 justify-end">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                            className="cursor-pointer"
+                        >
+                            {mobileMenuOpen ? <X className="size-8" /> : <Menu className="size-8" />}
+                            <span className="sr-only">Toggle menu</span>
+                        </Button>
+                    </div>
+                </div>
+            </motion.div>
             {/* Mobile menu */}
             <AnimatePresence>
                 {mobileMenuOpen && (
                     <motion.div
-                        initial={{ opacity: 0, y: -20 }}
+                        initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 20 }}
                         className="md:hidden absolute left-0 right-0 top-full bg-black/40"
