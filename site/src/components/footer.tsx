@@ -5,7 +5,7 @@ import Link from "next/link"
 const Footer = () => {
 
     return (
-        <footer className="w-full border-t bg-background/95 backdrop-blur-sm">
+        <footer className="w-full border-t">
             <div className="container mx-auto flex flex-col gap-4 px-6 py-10 items-center justify-center">
                 <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-4 w-full">
                     <div className="space-y-4 ">

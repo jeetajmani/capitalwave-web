@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef, useLayoutEffect } from "react"
 import Link from "next/link"
 import { AnimatePresence, motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
@@ -12,10 +12,30 @@ import {
 
 const Header = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+    const [headerHeight, setHeaderHeight] = useState(0)
+    const headerRef = useRef<HTMLElement | null>(null)
+
+    useLayoutEffect(() => {
+        if (headerRef.current) {
+            setHeaderHeight(headerRef.current.offsetHeight)
+        }
+    }, [])
+
+    // Update header height on window resize
+    useLayoutEffect(() => {
+        const handleResize = () => {
+            if (headerRef.current) {
+                setHeaderHeight(headerRef.current.offsetHeight)
+            }
+        }
+        window.addEventListener('resize', handleResize)
+        return () => window.removeEventListener('resize', handleResize)
+    }, [])
 
     return (
         <header
-            className="sticky top-0 z-50 w-full transition-all duration-300 bg-black/40 backdrop-blur-sm"
+            ref={headerRef}
+            className="sticky top-0 z-50 w-full transition-all duration-300 bg-black shadow-md border-b border-neutral-800"
             style={{ paddingTop: 'env(safe-area-inset-top)' }}
         >
             <motion.div
@@ -23,7 +43,7 @@ const Header = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1.0, ease: "easeOut" }}
             >
-                <div className="container mx-auto px-6 py-6 grid grid-cols-3 items-center">
+                <div className="container mx-auto px-6 py-4 grid grid-cols-3 items-center">
                     <div className="font-bold text-2xl text-foreground">
                         <Link href="/">
                             <span className="whitespace-nowrap">CAPITAL WAVE</span>
@@ -80,19 +100,21 @@ const Header = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 20 }}
-                        className="md:hidden absolute left-0 right-0 top-full bg-black/40"
+                        transition={{ duration: 0.25, ease: 'easeOut' }}
+                        className="md:hidden fixed left-0 right-0 w-full max-w-xl bg-black/40 backdrop-blur-sm z-50 shadow-md border-b border-neutral-800 mx-auto"
+                        style={{ top: headerHeight }}
                     >
-                        <div className="w-full max-w-xl mx-auto pt-2 pb-12 px-4 flex flex-col gap-6 text-4xl items-center justify-center">
-                            <Link href="/services" className="py-2 font-medium text-muted-foreground transition-colors hover:text-foreground" onClick={() => setMobileMenuOpen(false)}>
+                        <div className="pt-5 pb-12 px-4 flex flex-col gap-6 text-4xl items-center font-normal">
+                            <Link href="/services" className="py-2 text-muted-foreground transition-colors hover:text-foreground" onClick={() => setMobileMenuOpen(false)}>
                                 Services
                             </Link>
-                            <Link href="/roster" className="py-2 font-medium text-muted-foreground transition-colors hover:text-foreground" onClick={() => setMobileMenuOpen(false)}>
+                            <Link href="/roster" className="py-2 text-muted-foreground transition-colors hover:text-foreground" onClick={() => setMobileMenuOpen(false)}>
                                 Roster
                             </Link>
-                            <Link href="/events" className="py-2 font-medium text-muted-foreground transition-colors hover:text-foreground" onClick={() => setMobileMenuOpen(false)}>
+                            <Link href="/events" className="py-2 text-muted-foreground transition-colors hover:text-foreground" onClick={() => setMobileMenuOpen(false)}>
                                 Events
                             </Link>
-                            <Link href="/showcase" className="py-2 font-medium text-muted-foreground transition-colors hover:text-foreground" onClick={() => setMobileMenuOpen(false)}>
+                            <Link href="/showcase" className="py-2 text-muted-foreground transition-colors hover:text-foreground" onClick={() => setMobileMenuOpen(false)}>
                                 Showcase
                             </Link>
                             <div className="flex flex-col gap-2 pt-2 items-center">
