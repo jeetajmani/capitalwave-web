@@ -43,13 +43,13 @@ const Header = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1.0, ease: "easeOut" }}
             >
-                <div className="container mx-auto px-6 py-4 grid grid-cols-3 items-center">
-                    <div className="font-bold text-2xl text-foreground">
+                <div className="w-full mx-auto px-6 lg:px-20 py-4 grid md:grid-cols-3 items-center justify-items-stretch">
+                    <div className="font-bold text-2xl md:text-xl lg:text-2xl text-foreground justify-self-start">
                         <Link href="/">
                             <span className="whitespace-nowrap">CAPITAL WAVE</span>
                         </Link>
                     </div>
-                    <nav className="hidden md:flex gap-6 md:gap-8 lg:gap-12 justify-center text-md mx-auto">
+                    <nav className="hidden md:flex md:gap-4 lg:gap-10 justify-center text-md md:text-lg lg:text-xl">
                         <Link
                             href="/services"
                             className="font-medium text-muted-foreground transition-colors hover:text-foreground"
@@ -75,7 +75,7 @@ const Header = () => {
                             Showcase
                         </Link>
                     </nav>
-                    <div className="hidden md:flex flex-1 gap-4 items-center justify-end">
+                    <div className="hidden md:flex flex-1 gap-4 items-center justify-end justify-self-end">
                         <Link href="/book">
                             <AnimatedFlashButton text="Book Now" className="rounded-full" variant="outline" />
                         </Link>
