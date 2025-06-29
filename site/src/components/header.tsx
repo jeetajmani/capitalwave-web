@@ -14,7 +14,10 @@ const Header = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
     return (
-        <header className="sticky top-0 z-50 w-full transition-all duration-300 bg-black/40 backdrop-blur-sm">
+        <header
+            className="sticky top-0 z-50 w-full transition-all duration-300 bg-black/40 backdrop-blur-sm"
+            style={{ paddingTop: 'env(safe-area-inset-top)' }}
+        >
             <motion.div
                 initial={{ opacity: 0, y: -15 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -46,10 +49,10 @@ const Header = () => {
                             Events
                         </Link>
                         <Link
-                            href="/gallery"
+                            href="/showcase"
                             className="font-medium text-muted-foreground transition-colors hover:text-foreground"
                         >
-                            Gallery
+                            Showcase
                         </Link>
                     </nav>
                     <div className="hidden md:flex flex-1 gap-4 items-center justify-end">
@@ -89,8 +92,8 @@ const Header = () => {
                             <Link href="/events" className="py-2 font-medium text-muted-foreground transition-colors hover:text-foreground" onClick={() => setMobileMenuOpen(false)}>
                                 Events
                             </Link>
-                            <Link href="/gallery" className="py-2 font-medium text-muted-foreground transition-colors hover:text-foreground" onClick={() => setMobileMenuOpen(false)}>
-                                Gallery
+                            <Link href="/showcase" className="py-2 font-medium text-muted-foreground transition-colors hover:text-foreground" onClick={() => setMobileMenuOpen(false)}>
+                                Showcase
                             </Link>
                             <div className="flex flex-col gap-2 pt-2 items-center">
                                 <AnimatedFlashButton
