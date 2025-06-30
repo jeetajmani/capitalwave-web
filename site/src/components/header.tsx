@@ -9,6 +9,7 @@ import {
     Menu,
     X,
 } from "lucide-react"
+import Image from "next/image"
 
 const Header = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -44,12 +45,21 @@ const Header = () => {
                 transition={{ duration: 1.0, ease: "easeOut" }}
             >
                 <div className="w-full mx-auto px-6 lg:px-20 py-4 grid md:grid-cols-3 items-center justify-items-stretch">
-                    <div className="font-bold text-2xl md:text-xl lg:text-2xl text-foreground justify-self-start">
+                    <div className="font-bold text-2xl md:text-lg lg:text-xl xl:text-2xl 2xl:text-3xl text-foreground ">
                         <Link href="/">
-                            <span className="whitespace-nowrap">CAPITAL WAVE</span>
+                            <span className="flex items-center gap-2">
+                                <Image
+                                    src="/images/header_logo.png"
+                                    alt="Capital Wave Logo"
+                                    width={10000}
+                                    height={10000}
+                                    className="h-[0.9em] w-auto object-contain align-baseline"
+                                />
+                                <span className="whitespace-nowrap">CAPITAL WAVE</span>
+                            </span>
                         </Link>
                     </div>
-                    <nav className="hidden md:flex md:gap-4 lg:gap-10 justify-center text-md md:text-lg lg:text-xl">
+                    <nav className="hidden md:flex md:gap-2 lg:gap-4 xl:gap-10 justify-center text-md md:text-md lg:text-lg xl:text-xl 2xl:text-2xl">
                         <Link
                             href="/services"
                             className="font-medium text-muted-foreground transition-colors hover:text-foreground"

@@ -188,7 +188,8 @@ const Footer = () => {
                 </div>
                 <motion.div
                     variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
-                    transition={{ duration: 1, ease: "easeOut" }}
+                    transition={{ duration: 1.5, ease: "easeOut" }}
+                    className="flex flex-col gap-2"
                 >
                     <div className="flex flex-col gap-4 sm:flex-row justify-center items-center border-t border-border/40 pt-4 w-full text-center">
                         <p className="text-xs text-muted-foreground">
@@ -206,12 +207,7 @@ const Footer = () => {
               </Link>
             </div> */}
                     </div>
-                </motion.div>
 
-                <motion.div
-                    variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
-                    transition={{ duration: 1, ease: "easeOut" }}
-                >
                     <div className="flex flex-col sm:flex-row justify-center items-center w-full text-center">
                         <p className="text-xs text-muted-foreground">
                             Website designed with care by <Link href="https://jeetzingh.com" className="text-blue-500 hover:underline">JEETZINGH</Link>
