@@ -46,8 +46,9 @@ const Header = () => {
             >
                 <div className="w-full mx-auto px-6 lg:px-20 py-4 grid md:grid-cols-3 items-center justify-items-stretch">
                     <div className="font-bold text-2xl md:text-lg lg:text-xl xl:text-2xl 2xl:text-3xl text-foreground ">
-                        <Link href="/">
-                            <span className="flex items-center gap-2">
+
+                        <div className="flex items-center gap-2">
+                            <Link href="/">
                                 <Image
                                     src="/images/header_logo.png"
                                     alt="Capital Wave Logo"
@@ -55,9 +56,12 @@ const Header = () => {
                                     height={10000}
                                     className="h-[0.9em] w-auto object-contain align-baseline"
                                 />
+                            </Link>
+                            <Link href="/">
                                 <span className="whitespace-nowrap">CAPITAL WAVE</span>
-                            </span>
-                        </Link>
+                            </Link>
+                        </div>
+
                     </div>
                     <nav className="hidden md:flex md:gap-2 lg:gap-4 xl:gap-10 justify-center text-md md:text-md lg:text-lg xl:text-xl 2xl:text-2xl">
                         <Link
@@ -138,7 +142,7 @@ const Header = () => {
                     </motion.div>
                 )}
             </AnimatePresence>
-        </header>
+        </header >
     )
 }
 

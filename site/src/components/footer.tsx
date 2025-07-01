@@ -10,14 +10,14 @@ const Footer = () => {
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.2 }}
-                variants={{ visible: { transition: { staggerChildren: 0.4 } } }}
+                variants={{ visible: { transition: { staggerChildren: 0.3 } } }}
                 className="container mx-auto flex flex-col gap-4 px-6 py-10 items-center justify-center"
             >
                 <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-4 w-full pb-4">
                     {/** Fade in each grid block one by one */}
                     <motion.div
                         variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
-                        transition={{ duration: 1, ease: "easeOut" }}
+                        transition={{ duration: 2, ease: "easeOut" }}
                     >
                         <div className="space-y-4 ">
                             <div className="flex items-center gap-2 font-bold">
@@ -85,7 +85,7 @@ const Footer = () => {
                     </motion.div>
                     <motion.div
                         variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
-                        transition={{ duration: 1, ease: "easeOut" }}
+                        transition={{ duration: 2, ease: "easeOut" }}
                     >
                         <div className="space-y-4">
                             <h4 className="text-sm font-bold">
@@ -119,7 +119,7 @@ const Footer = () => {
                     </motion.div>
                     <motion.div
                         variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
-                        transition={{ duration: 1, ease: "easeOut" }}
+                        transition={{ duration: 2, ease: "easeOut" }}
                     >
                         <div className="space-y-4">
                             <h4 className="text-sm font-bold">
@@ -153,7 +153,7 @@ const Footer = () => {
                     </motion.div>
                     <motion.div
                         variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
-                        transition={{ duration: 1, ease: "easeOut" }}
+                        transition={{ duration: 2, ease: "easeOut" }}
                     >
                         <div className="space-y-4">
                             <h4 className="text-sm font-bold">
@@ -188,7 +188,7 @@ const Footer = () => {
                 </div>
                 <motion.div
                     variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
-                    transition={{ duration: 1.5, ease: "easeOut" }}
+                    transition={{ duration: 2.5, ease: "easeOut" }}
                     className="flex flex-col gap-2"
                 >
                     <div className="flex flex-col gap-4 sm:flex-row justify-center items-center border-t border-border/40 pt-4 w-full text-center">
