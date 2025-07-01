@@ -11,9 +11,24 @@ const AnimatedLogo: React.FC = () => {
   const baseSpeedRef = useRef<number>(0.006);
   const currentSpeedRef = useRef<number>(baseSpeedRef.current);
   const targetSpeedRef = useRef<number>(baseSpeedRef.current);
+  const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
 
   useEffect(() => {
-    if (!mountRef.current) return;
+    console.log('AnimatedLogo effect running');
+
+    if (!mountRef.current) {
+      console.log('No mount ref, returning');
+      return;
+    }
+
+    // Force cleanup any existing canvas first
+    const existingCanvas = mountRef.current.querySelector('canvas');
+    if (existingCanvas) {
+      console.log('Removing existing canvas before creating new one');
+      existingCanvas.remove();
+    }
+
+    console.log('Creating new canvas');
 
     // Create texture loader and texture inside the effect to avoid dependency issues
     const textureLoader = new THREE.TextureLoader();
@@ -172,19 +187,59 @@ const AnimatedLogo: React.FC = () => {
       renderer.render(scene, camera);
     };
 
-    const handleCanvasClick = () => {
-      isAnimatingRef.current = !isAnimatingRef.current;
+    cameraRef.current = camera;
 
-      if (isAnimatingRef.current) {
-        // Resume animation - set target speed back to normal
-        targetSpeedRef.current = baseSpeedRef.current;
-      } else {
-        // Stop animation - set target speed to 0 (this triggers the easing)
-        targetSpeedRef.current = 0;
+    const handleCanvasClick = (event: MouseEvent) => {
+      if (!pyramidRef.current || !cameraRef.current || !mountRef.current) return;
+
+      // Get mouse position relative to the canvas
+      const rect = renderer.domElement.getBoundingClientRect();
+      const mouse = new THREE.Vector2();
+
+      // Convert mouse coordinates to normalized device coordinates (-1 to +1)
+      mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+      // Create raycaster
+      const raycaster = new THREE.Raycaster();
+      raycaster.setFromCamera(mouse, cameraRef.current);
+
+      // Check for intersections with the pyramid
+      const intersects = raycaster.intersectObject(pyramidRef.current);
+
+      // Only trigger if pyramid was actually clicked
+      if (intersects.length > 0) {
+        isAnimatingRef.current = !isAnimatingRef.current;
+
+        if (isAnimatingRef.current) {
+          targetSpeedRef.current = baseSpeedRef.current;
+          console.log('Animation resuming...');
+        } else {
+          targetSpeedRef.current = 0;
+          console.log('Animation easing to stop...');
+        }
       }
     };
 
+    const handleCanvasMouseMove = (event: MouseEvent) => {
+      if (!pyramidRef.current || !cameraRef.current || !mountRef.current) return;
+
+      const rect = renderer.domElement.getBoundingClientRect();
+      const mouse = new THREE.Vector2();
+      mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+      const raycaster = new THREE.Raycaster();
+      raycaster.setFromCamera(mouse, cameraRef.current);
+      const intersects = raycaster.intersectObject(pyramidRef.current);
+
+      // Change cursor when hovering over pyramid
+      renderer.domElement.style.cursor = intersects.length > 0 ? 'pointer' : 'default';
+    };
+
+    // Add both event listeners
     renderer.domElement.addEventListener('click', handleCanvasClick);
+    renderer.domElement.addEventListener('mousemove', handleCanvasMouseMove);
 
     // Start animation
     animate();
@@ -202,23 +257,69 @@ const AnimatedLogo: React.FC = () => {
 
     // Cleanup
     return () => {
+
+      console.log('AnimatedLogo cleanup running');
+
+      // Enhanced cleanup - ensure canvas is definitely removed
+      if (mountRef.current) {
+        const canvases = mountRef.current.querySelectorAll('canvas');
+        canvases.forEach(canvas => {
+          console.log('Removing canvas in cleanup');
+          canvas.remove();
+        });
+      }
+
+      // Cancel animation frame
       if (animationIdRef.current) {
         cancelAnimationFrame(animationIdRef.current);
+        animationIdRef.current = null;
       }
+
+      // Remove event listeners
       window.removeEventListener('resize', handleResize);
 
-      // Remove click listener
       if (renderer.domElement) {
         renderer.domElement.removeEventListener('click', handleCanvasClick);
+        renderer.domElement.removeEventListener('mousemove', handleCanvasMouseMove);
       }
 
-      if (mountRef.current && renderer.domElement) {
+      // Remove canvas from DOM
+      if (mountRef.current && renderer.domElement && mountRef.current.contains(renderer.domElement)) {
         mountRef.current.removeChild(renderer.domElement);
       }
 
+      // Dispose of Three.js objects
+      if (pyramidRef.current) {
+        scene.remove(pyramidRef.current);
+
+        // Dispose of geometry and materials
+        if (pyramidRef.current.geometry) {
+          pyramidRef.current.geometry.dispose();
+        }
+
+        if (Array.isArray(pyramidRef.current.material)) {
+          pyramidRef.current.material.forEach(material => material.dispose());
+        } else if (pyramidRef.current.material) {
+          pyramidRef.current.material.dispose();
+        }
+      }
+
+      // Dispose of textures
+      if (logoTexture) {
+        logoTexture.dispose();
+      }
+
+      // Dispose of renderer
       if (renderer) {
         renderer.dispose();
+        renderer.forceContextLoss();
       }
+
+      // Clear refs
+      pyramidRef.current = null;
+      rendererRef.current = null;
+      sceneRef.current = null;
+      cameraRef.current = null;
     };
 
   }, []);
@@ -228,9 +329,9 @@ const AnimatedLogo: React.FC = () => {
       ref={mountRef}
       style={{
         width: '100%',
-        height: '300px',
+        height: '400px',
         background: 'transparent',
-        cursor: 'pointer' // Add pointer cursor to indicate it's clickable
+        cursor: 'default' // Remove pointer cursor since only pyramid is clickable
       }}
     />
   );
