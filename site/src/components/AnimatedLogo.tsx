@@ -14,21 +14,16 @@ const AnimatedLogo: React.FC = () => {
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
 
   useEffect(() => {
-    console.log('AnimatedLogo effect running');
 
     if (!mountRef.current) {
-      console.log('No mount ref, returning');
       return;
     }
 
     // Force cleanup any existing canvas first
     const existingCanvas = mountRef.current.querySelector('canvas');
     if (existingCanvas) {
-      console.log('Removing existing canvas before creating new one');
       existingCanvas.remove();
     }
-
-    console.log('Creating new canvas');
 
     // Create texture loader and texture inside the effect to avoid dependency issues
     const textureLoader = new THREE.TextureLoader();
@@ -55,7 +50,7 @@ const AnimatedLogo: React.FC = () => {
     // Create renderer
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
-      antialias: true,
+      antialias: false,
       powerPreference: "high-performance",
       precision: "highp"
     });
@@ -159,13 +154,13 @@ const AnimatedLogo: React.FC = () => {
     pyramidRef.current = pyramid;
 
     // Position camera
-    camera.position.set(0, 1, 5);
+    camera.position.set(0, 1.5, 5);
     camera.lookAt(0, 0, 0);
 
     const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
     scene.add(ambientLight);
 
-    const frontLight = new THREE.DirectionalLight(0xffffff, 4.0);
+    const frontLight = new THREE.DirectionalLight(0xffffff, 5.0);
     frontLight.position.set(0, 0, 10);
     frontLight.target.position.set(0, 0, 0);
     scene.add(frontLight);
@@ -213,10 +208,8 @@ const AnimatedLogo: React.FC = () => {
 
         if (isAnimatingRef.current) {
           targetSpeedRef.current = baseSpeedRef.current;
-          console.log('Animation resuming...');
         } else {
           targetSpeedRef.current = 0;
-          console.log('Animation easing to stop...');
         }
       }
     };
@@ -234,7 +227,7 @@ const AnimatedLogo: React.FC = () => {
       const intersects = raycaster.intersectObject(pyramidRef.current);
 
       // Change cursor when hovering over pyramid
-      renderer.domElement.style.cursor = intersects.length > 0 ? 'pointer' : 'default';
+      renderer.domElement.style.cursor = intersects.length > 0 ? 'crosshair' : 'default';
     };
 
     // Add both event listeners
@@ -244,27 +237,44 @@ const AnimatedLogo: React.FC = () => {
     // Start animation
     animate();
 
+    // Responsive pyramid scaling and camera distance
+    // function fitPyramidToCanvas() {
+    //   if (!mountRef.current || !pyramidRef.current || !cameraRef.current) return;
+    //   const width = mountRef.current.clientWidth;
+    //   const height = mountRef.current.clientHeight;
+    //   // Use the smaller of width or height for scaling
+    //   const minDim = Math.min(width, height);
+    //   // Base scale: fits well for 945x400, adjust for smaller screens
+    //   let scale = minDim / 400; // 400 is a reference size, tweak as needed
+    //   scale = Math.max(0.6, Math.min(scale, 2.5)); // Clamp scale for sanity
+    //   pyramidRef.current.scale.set(scale, scale, scale);
+    //   // Camera distance: move back a bit for small screens
+    //   const camDist = 5 + (400 - minDim) / 200; // Move back as screen shrinks
+    //   cameraRef.current.position.set(0, 1.5, camDist);
+    //   cameraRef.current.lookAt(0, 0, 0);
+    // }
+
+    // Initial fit
+    // fitPyramidToCanvas();
+
     // Handle window resize
     const handleResize = (): void => {
       if (!mountRef.current || !camera || !renderer) return;
-
       camera.aspect = mountRef.current.clientWidth / mountRef.current.clientHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
-    };
+      // fitPyramidToCanvas(); // Responsive fit
+    };    
 
     window.addEventListener('resize', handleResize);
 
     // Cleanup
     return () => {
 
-      console.log('AnimatedLogo cleanup running');
-
       // Enhanced cleanup - ensure canvas is definitely removed
       if (mountRef.current) {
         const canvases = mountRef.current.querySelectorAll('canvas');
         canvases.forEach(canvas => {
-          console.log('Removing canvas in cleanup');
           canvas.remove();
         });
       }
@@ -329,9 +339,9 @@ const AnimatedLogo: React.FC = () => {
       ref={mountRef}
       style={{
         width: '100%',
-        height: '400px',
+        height: '90%',
         background: 'transparent',
-        cursor: 'default' // Remove pointer cursor since only pyramid is clickable
+        cursor: 'default',
       }}
     />
   );

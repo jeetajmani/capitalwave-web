@@ -48,7 +48,7 @@ const Header = () => {
                     <div className="font-bold text-2xl md:text-lg lg:text-xl xl:text-2xl 2xl:text-3xl text-foreground ">
 
                         <div className="flex items-center gap-2">
-                            <Link href="/">
+                            <Link href="/" onClick={() => setMobileMenuOpen(false)}>
                                 <Image
                                     src="/images/header_logo.png"
                                     alt="Capital Wave Logo"
@@ -57,7 +57,7 @@ const Header = () => {
                                     className="h-[0.9em] w-auto object-contain align-baseline"
                                 />
                             </Link>
-                            <Link href="/">
+                            <Link href="/" onClick={() => setMobileMenuOpen(false)}>
                                 <span className="whitespace-nowrap">CAPITAL WAVE</span>
                             </Link>
                         </div>
@@ -115,20 +115,27 @@ const Header = () => {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 20 }}
                         transition={{ duration: 0.25, ease: 'easeOut' }}
-                        className="md:hidden fixed left-0 right-0 w-full max-w-xl bg-black/40 backdrop-blur-sm z-50 shadow-md border-b border-neutral-800 mx-auto"
+                        className="md:hidden fixed inset-0 w-full h-full bg-black/80 backdrop-blur-sm z-50 shadow-md border-b border-neutral-800"
                         style={{ top: headerHeight }}
+                        onClick={() => setMobileMenuOpen(false)}
                     >
-                        <div className="pt-5 pb-12 px-4 flex flex-col gap-8 text-4xl items-center font-normal">
-                            <Link href="/services" className="py-2 text-muted-foreground transition-colors hover:text-foreground" onClick={() => setMobileMenuOpen(false)}>
+                        <div className="pt-6 pb-12 px-4 flex flex-col gap-8 text-4xl items-center font-normal" onClick={e => {
+                            const target = e.target as HTMLElement;
+                            if (target.closest('a')) {
+                                setTimeout(() => setMobileMenuOpen(false), 100);
+                            }
+                            e.stopPropagation();
+                        }}>
+                            <Link href="/services" className="py-2 text-muted-foreground transition-colors hover:text-foreground">
                                 Services
                             </Link>
-                            <Link href="/roster" className="py-2 text-muted-foreground transition-colors hover:text-foreground" onClick={() => setMobileMenuOpen(false)}>
+                            <Link href="/roster" className="py-2 text-muted-foreground transition-colors hover:text-foreground">
                                 Roster
                             </Link>
-                            <Link href="/events" className="py-2 text-muted-foreground transition-colors hover:text-foreground" onClick={() => setMobileMenuOpen(false)}>
+                            <Link href="/events" className="py-2 text-muted-foreground transition-colors hover:text-foreground">
                                 Events
                             </Link>
-                            <Link href="/showcase" className="py-2 text-muted-foreground transition-colors hover:text-foreground" onClick={() => setMobileMenuOpen(false)}>
+                            <Link href="/showcase" className="py-2 text-muted-foreground transition-colors hover:text-foreground">
                                 Showcase
                             </Link>
                             <div className="flex flex-col gap-2 pt-2 items-center">
@@ -136,6 +143,7 @@ const Header = () => {
                                     text="Book Now"
                                     className="rounded-full px-10 py-9 text-3xl"
                                     variant="outline"
+                                    onClick={() => setMobileMenuOpen(false)}
                                 />
                             </div>
                         </div>
