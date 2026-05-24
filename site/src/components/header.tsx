@@ -45,7 +45,7 @@ const Header = () => {
                 transition={{ duration: 1.0, ease: "easeOut" }}
             >
                 <div className="w-full mx-auto px-6 lg:px-20 py-4 grid md:grid-cols-3 items-center justify-items-stretch">
-                    <div className="font-bold text-2xl md:text-lg lg:text-xl xl:text-2xl 2xl:text-3xl text-foreground ">
+                    <div className="font-black text-2xl md:text-lg lg:text-xl xl:text-2xl 2xl:text-3xl text-foreground ">
 
                         <div className="flex items-center gap-2">
                             <Link href="/" onClick={() => setMobileMenuOpen(false)}>
@@ -58,35 +58,29 @@ const Header = () => {
                                 />
                             </Link>
                             <Link href="/" onClick={() => setMobileMenuOpen(false)}>
-                                <span className="whitespace-nowrap">CAPITAL WAVE</span>
+                                <span className="whitespace-nowrap tracking-widest text-white">CAPITAL WAVE</span>
                             </Link>
                         </div>
 
                     </div>
-                    <nav className="hidden md:flex md:gap-2 lg:gap-4 xl:gap-10 justify-center text-md md:text-md lg:text-lg xl:text-xl 2xl:text-2xl">
+                    <nav className="hidden md:flex md:gap-4 lg:gap-8 xl:gap-12 justify-center">
                         <Link
                             href="/services"
-                            className="font-medium text-muted-foreground transition-colors hover:text-foreground"
+                            className="font-medium tracking-widest uppercase text-xs lg:text-sm xl:text-base text-muted-foreground transition-colors hover:text-foreground"
                         >
                             Services
                         </Link>
                         <Link
                             href="/roster"
-                            className="font-medium text-muted-foreground transition-colors hover:text-foreground"
+                            className="font-medium tracking-widest uppercase text-xs lg:text-sm xl:text-base text-muted-foreground transition-colors hover:text-foreground"
                         >
                             Roster
                         </Link>
                         <Link
                             href="/events"
-                            className="font-medium text-muted-foreground transition-colors hover:text-foreground"
+                            className="font-medium tracking-widest uppercase text-xs lg:text-sm xl:text-base text-muted-foreground transition-colors hover:text-foreground"
                         >
                             Events
-                        </Link>
-                        <Link
-                            href="/showcase"
-                            className="font-medium text-muted-foreground transition-colors hover:text-foreground"
-                        >
-                            Showcase
                         </Link>
                     </nav>
                     <div className="hidden md:flex flex-1 gap-4 items-center justify-end justify-self-end">
@@ -115,28 +109,25 @@ const Header = () => {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 20 }}
                         transition={{ duration: 0.25, ease: 'easeOut' }}
-                        className="md:hidden fixed inset-0 w-full h-full bg-black/80 backdrop-blur-sm z-50 shadow-md border-b border-neutral-800"
+                        className="md:hidden fixed inset-0 w-full h-full bg-black z-50 border-b border-neutral-800"
                         style={{ top: headerHeight }}
                         onClick={() => setMobileMenuOpen(false)}
                     >
-                        <div className="pt-6 pb-12 px-4 flex flex-col gap-8 text-4xl items-center font-normal" onClick={e => {
+                        <div className="pt-8 pb-12 px-6 flex flex-col gap-6 items-center" onClick={e => {
                             const target = e.target as HTMLElement;
                             if (target.closest('a')) {
                                 setTimeout(() => setMobileMenuOpen(false), 100);
                             }
                             e.stopPropagation();
                         }}>
-                            <Link href="/services" className="py-2 text-muted-foreground transition-colors hover:text-foreground">
+                            <Link href="/services" onClick={() => setMobileMenuOpen(false)} className="py-3 font-medium tracking-widest uppercase text-sm text-muted-foreground transition-colors hover:text-foreground">
                                 Services
                             </Link>
-                            <Link href="/roster" className="py-2 text-muted-foreground transition-colors hover:text-foreground">
+                            <Link href="/roster" className="py-3 font-medium tracking-widest uppercase text-sm text-muted-foreground transition-colors hover:text-foreground">
                                 Roster
                             </Link>
-                            <Link href="/events" className="py-2 text-muted-foreground transition-colors hover:text-foreground">
+                            <Link href="/events" className="py-3 font-medium tracking-widest uppercase text-sm text-muted-foreground transition-colors hover:text-foreground">
                                 Events
-                            </Link>
-                            <Link href="/showcase" className="py-2 text-muted-foreground transition-colors hover:text-foreground">
-                                Showcase
                             </Link>
                             <div className="flex flex-col gap-2 pt-2 items-center">
                                 <AnimatedFlashButton

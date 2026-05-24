@@ -1,0 +1,128 @@
+"use client"
+
+import { useState } from 'react'
+import { motion } from 'framer-motion'
+import { AnimatedFlashButton } from '@/components/ui/flashbutton'
+
+const serviceOptions = [
+  "Professional Audio Recording",
+  "Music Production",
+  "Mixing & Mastering",
+  "Video Production & Editing",
+  "Other",
+]
+
+export default function BookPage() {
+  const [form, setForm] = useState({ name: '', email: '', service: '', date: '', message: '' })
+  const [submitted, setSubmitted] = useState(false)
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    // TODO: wire up to email/backend
+    setSubmitted(true)
+  }
+
+  return (
+    <div className="flex min-h-[100dvh] flex-col">
+      <main className="flex-1 px-6 lg:px-20 pt-16 pb-24">
+
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+          className="mb-16"
+        >
+          <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground mb-3">Let&apos;s Create</p>
+          <h1 className="text-5xl md:text-7xl font-black tracking-widest uppercase">Book a Session</h1>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: 'easeOut', delay: 0.15 }}
+          className="max-w-2xl"
+        >
+          {submitted ? (
+            <div className="py-16">
+              <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground mb-4">Received</p>
+              <h2 className="text-3xl font-black tracking-widest uppercase mb-4">We&apos;ll Be In Touch</h2>
+              <p className="text-muted-foreground text-sm tracking-wide">
+                Thanks for reaching out. A member of our team will contact you within 48 hours.
+              </p>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="flex flex-col gap-10">
+              <div className="flex flex-col gap-2">
+                <label className="text-xs tracking-[0.3em] uppercase text-muted-foreground">Full Name</label>
+                <input
+                  name="name"
+                  value={form.name}
+                  onChange={handleChange}
+                  required
+                  placeholder="Your name"
+                  className="bg-transparent border-b border-neutral-700 focus:border-white outline-none py-3 text-sm text-foreground placeholder:text-muted-foreground/40 transition-colors"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label className="text-xs tracking-[0.3em] uppercase text-muted-foreground">Email</label>
+                <input
+                  name="email"
+                  type="email"
+                  value={form.email}
+                  onChange={handleChange}
+                  required
+                  placeholder="your@email.com"
+                  className="bg-transparent border-b border-neutral-700 focus:border-white outline-none py-3 text-sm text-foreground placeholder:text-muted-foreground/40 transition-colors"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label className="text-xs tracking-[0.3em] uppercase text-muted-foreground">Service</label>
+                <select
+                  name="service"
+                  value={form.service}
+                  onChange={handleChange}
+                  required
+                  className="bg-black border-b border-neutral-700 focus:border-white outline-none py-3 text-sm text-foreground transition-colors appearance-none cursor-pointer"
+                >
+                  <option value="" disabled>Select a service</option>
+                  {serviceOptions.map(s => (
+                    <option key={s} value={s}>{s}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex flex-col gap-2">
+                <label className="text-xs tracking-[0.3em] uppercase text-muted-foreground">Preferred Date</label>
+                <input
+                  name="date"
+                  type="date"
+                  value={form.date}
+                  onChange={handleChange}
+                  className="bg-transparent border-b border-neutral-700 focus:border-white outline-none py-3 text-sm text-foreground transition-colors"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label className="text-xs tracking-[0.3em] uppercase text-muted-foreground">Message</label>
+                <textarea
+                  name="message"
+                  value={form.message}
+                  onChange={handleChange}
+                  rows={4}
+                  placeholder="Tell us about your project..."
+                  className="bg-transparent border-b border-neutral-700 focus:border-white outline-none py-3 text-sm text-foreground placeholder:text-muted-foreground/40 transition-colors resize-none"
+                />
+              </div>
+              <div className="pt-2">
+                <AnimatedFlashButton text="Send Request" variant="outline" size="lg" />
+              </div>
+            </form>
+          )}
+        </motion.div>
+
+      </main>
+    </div>
+  )
+}

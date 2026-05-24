@@ -11,6 +11,16 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "Capital Wave Studio",
   description: "Elevate your sound with Capital Wave Studio, Victoria's premier music studio turned record label. Specializing in recording, music production, mixing, mastering, and artist development, we help you create and release your music with professional quality. Join us to transform your musical vision into reality.",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", rel: "shortcut icon" },
+      { url: "/favicon-96x96.png", sizes: "96x96", type: "image/png" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    apple: { url: "/apple-touch-icon.png", sizes: "180x180" },
+  },
+  manifest: "/site.webmanifest",
+  appleWebApp: { title: "Capital Wave" },
 }
 
 export default function RootLayout({

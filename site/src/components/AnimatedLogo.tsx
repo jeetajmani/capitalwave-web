@@ -41,7 +41,7 @@ const AnimatedLogo: React.FC = () => {
 
     // Create camera
     const camera = new THREE.PerspectiveCamera(
-      75,
+      55,
       mountRef.current.clientWidth / mountRef.current.clientHeight,
       0.1,
       1000
@@ -154,7 +154,7 @@ const AnimatedLogo: React.FC = () => {
     pyramidRef.current = pyramid;
 
     // Position camera
-    camera.position.set(0, 1.5, 5);
+    camera.position.set(0, 1.5, 7);
     camera.lookAt(0, 0, 0);
 
     const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
@@ -339,7 +339,7 @@ const AnimatedLogo: React.FC = () => {
       ref={mountRef}
       style={{
         width: '100%',
-        height: '90%',
+        height: '100%',
         background: 'transparent',
         cursor: 'default',
       }}

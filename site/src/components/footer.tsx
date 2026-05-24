@@ -12,9 +12,9 @@ const Footer = () => {
                     {/* Fade in each grid block one by one */}
                     <div>
                         <div className="space-y-4 ">
-                            <div className="flex items-center gap-2 font-bold">
-                                <Link href="/" className="text-foreground hover:text-blue-500 transition-colors">
-                                    <span>Capital Wave Studio</span>
+                            <div className="flex items-center gap-2 font-black">
+                                <Link href="/" className="tracking-widest bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent hover:to-gray-200 transition-all">
+                                    <span>CAPITAL WAVE</span>
                                 </Link>
                             </div>
                             <p className="text-sm text-muted-foreground">
@@ -77,8 +77,8 @@ const Footer = () => {
                     </div>
                     <div>
                         <div className="space-y-4">
-                            <h4 className="text-sm font-bold">
-                                <Link href="/services" className="text-foreground hover:text-blue-500 transition-colors">
+                            <h4 className="text-xs font-bold tracking-widest uppercase text-muted-foreground">
+                                <Link href="/services" className="hover:text-foreground transition-colors">
                                     Services
                                 </Link>
                             </h4>
@@ -108,8 +108,8 @@ const Footer = () => {
                     </div>
                     <div>
                         <div className="space-y-4">
-                            <h4 className="text-sm font-bold">
-                                <Link href="/roster" className="text-foreground hover:text-blue-500 transition-colors">
+                            <h4 className="text-xs font-bold tracking-widest uppercase text-muted-foreground">
+                                <Link href="/roster" className="hover:text-foreground transition-colors">
                                     Roster
                                 </Link>
                             </h4>
@@ -139,8 +139,8 @@ const Footer = () => {
                     </div>
                     <div>
                         <div className="space-y-4">
-                            <h4 className="text-sm font-bold">
-                                <Link href="/events" className="text-foreground hover:text-blue-500 transition-colors">
+                            <h4 className="text-xs font-bold tracking-widest uppercase text-muted-foreground">
+                                <Link href="/events" className="hover:text-foreground transition-colors">
                                     Events
                                 </Link>
                             </h4>
