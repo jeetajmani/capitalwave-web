@@ -27,10 +27,6 @@ export const eventType = defineType({
       name: 'type',
       title: 'Type',
       type: 'string',
-      options: {
-        list: ['Showcase', 'Concert', 'Workshop', 'Open Day'],
-        layout: 'radio',
-      },
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -38,6 +34,12 @@ export const eventType = defineType({
       title: 'Description',
       type: 'text',
       rows: 3,
+    }),
+    defineField({
+      name: 'ticketUrl',
+      title: 'Ticket URL',
+      type: 'url',
+      description: 'Link to purchase tickets (leave empty if free or no tickets)',
     }),
   ],
   preview: {
