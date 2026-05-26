@@ -1,15 +1,14 @@
 "use client"
 
-import { motion } from 'framer-motion'
+import { useEffect, useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import Image from 'next/image'
 
 const MONTHS = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC']
 
 function parseDateParts(dateStr: string) {
   const [, mm, dd] = dateStr.split('-')
-  return {
-    month: MONTHS[parseInt(mm) - 1],
-    day: dd,
-  }
+  return { month: MONTHS[parseInt(mm) - 1], day: dd }
 }
 
 type SanityEvent = {
@@ -17,12 +16,27 @@ type SanityEvent = {
   title: string
   date: string
   venue: string
+  time?: string
   type: string
   description?: string
   ticketUrl?: string
+  posterUrl?: string
 }
 
 export default function EventsContent({ upcoming, past }: { upcoming: SanityEvent[], past: SanityEvent[] }) {
+  const [selectedEvent, setSelectedEvent] = useState<SanityEvent | null>(null)
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setSelectedEvent(null) }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
+
+  useEffect(() => {
+    document.body.style.overflow = selectedEvent ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [selectedEvent])
+
   return (
     <div className="flex min-h-[100dvh] flex-col">
       <main className="flex-1 px-6 lg:px-20 pt-16 pb-24">
@@ -38,7 +52,7 @@ export default function EventsContent({ upcoming, past }: { upcoming: SanityEven
         </motion.div>
 
         {/* Upcoming */}
-        <section className="max-w-4xl mx-auto mb-20">
+        <section className="mb-20">
           <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground mb-8">Upcoming</p>
           {upcoming.length === 0 ? (
             <p className="text-sm text-muted-foreground tracking-wider">No upcoming events at this time.</p>
@@ -57,6 +71,7 @@ export default function EventsContent({ upcoming, past }: { upcoming: SanityEven
                         transition: { duration: 0.2, ease: 'easeOut' },
                       }}
                       transition={{ duration: 0.5, ease: 'easeOut', delay: i * 0.08 }}
+                      onClick={() => setSelectedEvent(event)}
                       className="flex items-center gap-8 cursor-pointer"
                       style={{
                         paddingTop: '1.75rem',
@@ -68,10 +83,13 @@ export default function EventsContent({ upcoming, past }: { upcoming: SanityEven
                         borderRadius: '12px',
                       }}
                     >
-                      {/* Date */}
+                      {/* Date + time */}
                       <div className="text-center shrink-0" style={{ minWidth: '3.5rem' }}>
                         <p className="text-xs tracking-[0.2em] uppercase text-muted-foreground">{month}</p>
                         <p className="text-4xl font-black leading-none">{day}</p>
+                        {event.time && (
+                          <p className="text-xs tracking-[0.15em] uppercase text-muted-foreground/70 mt-1">{event.time}</p>
+                        )}
                       </div>
 
                       {/* Content */}
@@ -82,11 +100,11 @@ export default function EventsContent({ upcoming, past }: { upcoming: SanityEven
                         </div>
                         <p className="text-xs tracking-[0.2em] uppercase text-muted-foreground mb-2">{event.venue}</p>
                         {event.description && (
-                          <p className="text-sm text-muted-foreground">{event.description}</p>
+                          <p className="text-sm text-muted-foreground" style={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{event.description}</p>
                         )}
                       </div>
 
-                      {/* Tickets */}
+                      {/* Quick ticket link */}
                       {event.ticketUrl && (
                         <a
                           href={event.ticketUrl}
@@ -126,7 +144,7 @@ export default function EventsContent({ upcoming, past }: { upcoming: SanityEven
 
         {/* Past */}
         {past.length > 0 && (
-          <section className="max-w-4xl mx-auto">
+          <section>
             <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground mb-8">Past Events</p>
             <div className="flex flex-col">
               {past.map((event, i) => {
@@ -156,6 +174,86 @@ export default function EventsContent({ upcoming, past }: { upcoming: SanityEven
         )}
 
       </main>
+
+      {/* Poster Lightbox */}
+      <AnimatePresence>
+        {selectedEvent && (
+          <motion.div
+            key="lightbox"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            onClick={() => setSelectedEvent(null)}
+            className="fixed inset-0 z-50 flex items-center justify-center"
+            style={{ backgroundColor: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(8px)' }}
+          >
+            {/* Flip card */}
+            <div style={{ perspective: '1200px' }} onClick={e => e.stopPropagation()}>
+              <motion.div
+                initial={{ rotateY: -90, opacity: 0 }}
+                animate={{ rotateY: 0, opacity: 1 }}
+                transition={{ type: 'spring', damping: 22, stiffness: 130, delay: 0.08 }}
+                className="flex flex-col items-center gap-5"
+                style={{ width: 'min(380px, 88vw)' }}
+              >
+                {/* Poster */}
+                <div
+                  className="relative w-full overflow-hidden rounded-xl border border-neutral-700/50"
+                  style={{ aspectRatio: '2/3', background: '#111' }}
+                >
+                  {/* X button */}
+                  <button
+                    onClick={e => { e.stopPropagation(); setSelectedEvent(null) }}
+                    className="text-white/70 transition-colors"
+                    style={{ position: 'absolute', top: '0.5rem', left: '0.5rem', zIndex: 10, fontSize: '16px', lineHeight: 1, padding: '0.25rem' }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#fff' }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.7)' }}
+                  >
+                    ✕
+                  </button>
+                  {selectedEvent.posterUrl ? (
+                    <Image
+                      src={selectedEvent.posterUrl}
+                      alt={`${selectedEvent.title} poster`}
+                      fill
+                      className="object-cover"
+                      sizes="380px"
+                    />
+                  ) : (
+                    <div className="flex flex-col items-center justify-center h-full gap-3">
+                      <p className="font-black tracking-wider uppercase text-lg">{selectedEvent.title}</p>
+                      <p className="text-xs tracking-[0.2em] uppercase text-muted-foreground">{selectedEvent.venue}</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Full description */}
+                {selectedEvent.description && (
+                  <p className="w-full text-sm text-muted-foreground text-center" style={{ lineHeight: '1.6' }}>{selectedEvent.description}</p>
+                )}
+
+                {/* Flashing ticket button */}
+                {selectedEvent.ticketUrl ? (
+                  <motion.a
+                    href={selectedEvent.ticketUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    animate={{ opacity: [1, 0.35, 1] }}
+                    transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
+                    onClick={e => e.stopPropagation()}
+                    className="w-full text-center font-black tracking-[0.25em] uppercase border border-white rounded-full py-4 text-sm"
+                  >
+                    Get your tickets now!
+                  </motion.a>
+                ) : (
+                  <p className="text-xs tracking-[0.2em] uppercase text-muted-foreground/50">Free admission</p>
+                )}
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
