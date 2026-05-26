@@ -53,7 +53,7 @@ export default function EventsContent({ upcoming, past }: { upcoming: SanityEven
 
         {/* Upcoming */}
         <section className="mb-20">
-          <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground mb-8">Upcoming</p>
+          <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground mb-2">Upcoming</p>
           {upcoming.length === 0 ? (
             <p className="text-sm text-muted-foreground tracking-wider">No upcoming events at this time.</p>
           ) : (
@@ -96,7 +96,7 @@ export default function EventsContent({ upcoming, past }: { upcoming: SanityEven
                       <div className="flex-1" style={{ minWidth: 0 }}>
                         <div className="flex flex-wrap items-center gap-3 mb-2">
                           <p className="font-black tracking-wider uppercase text-base">{event.title}</p>
-                          <span className="text-xs tracking-[0.2em] uppercase text-muted-foreground border border-neutral-700/60 rounded-full px-3 py-0.5 shrink-0">{event.type}</span>
+                          <span className="hidden sm:inline text-xs tracking-[0.2em] uppercase text-muted-foreground border border-neutral-700/60 rounded-full px-3 py-0.5 shrink-0">{event.type}</span>
                         </div>
                         <p className="text-xs tracking-[0.2em] uppercase text-muted-foreground mb-2">{event.venue}</p>
                         {event.description && (
@@ -145,7 +145,7 @@ export default function EventsContent({ upcoming, past }: { upcoming: SanityEven
         {/* Past */}
         {past.length > 0 && (
           <section>
-            <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground mb-8">Past Events</p>
+            <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground mb-2">Past Events</p>
             <div className="flex flex-col">
               {past.map((event, i) => {
                 const { month, day } = parseDateParts(event.date)
@@ -162,10 +162,12 @@ export default function EventsContent({ upcoming, past }: { upcoming: SanityEven
                       <p className="text-2xl font-black leading-none">{day}</p>
                     </div>
                     <div className="flex-1" style={{ minWidth: 0 }}>
-                      <p className="font-bold tracking-wider uppercase text-sm">{event.title}</p>
-                      <p className="text-xs tracking-[0.2em] uppercase text-muted-foreground mt-1">{event.venue}</p>
+                      <div className="flex flex-wrap items-center gap-3 mb-1">
+                        <p className="font-bold tracking-wider uppercase text-sm">{event.title}</p>
+                        <span className="hidden sm:inline text-xs tracking-[0.2em] uppercase text-muted-foreground border border-neutral-700/40 rounded-full px-3 py-0.5 shrink-0">{event.type}</span>
+                      </div>
+                      <p className="text-xs tracking-[0.2em] uppercase text-muted-foreground">{event.venue}</p>
                     </div>
-                    <span className="text-xs tracking-[0.2em] uppercase text-muted-foreground border border-neutral-700/40 rounded-full px-3 py-0.5 shrink-0">{event.type}</span>
                   </motion.div>
                 )
               })}
@@ -178,21 +180,36 @@ export default function EventsContent({ upcoming, past }: { upcoming: SanityEven
       {/* Poster Lightbox */}
       <AnimatePresence>
         {selectedEvent && (
-          <motion.div
-            key="lightbox"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
-            onClick={() => setSelectedEvent(null)}
-            className="fixed inset-0 z-50 flex items-center justify-center"
-            style={{ backgroundColor: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(8px)' }}
-          >
-            {/* Flip card */}
-            <div style={{ perspective: '1200px' }} onClick={e => e.stopPropagation()}>
+          <>
+            {/* Backdrop — animates blur amount and bg color (never changes opacity),
+                so the GPU compositing layer is never promoted/demoted mid-animation */}
+            <motion.div
+              key="backdrop"
+              initial={{ backdropFilter: 'blur(0px)', backgroundColor: 'rgba(0,0,0,0)' }}
+              animate={{ backdropFilter: 'blur(8px)', backgroundColor: 'rgba(0,0,0,0.65)' }}
+              exit={{ backdropFilter: 'blur(0px)', backgroundColor: 'rgba(0,0,0,0)' }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+              onClick={() => setSelectedEvent(null)}
+              className="fixed inset-0 z-50"
+            />
+
+            {/* Card container — separate opacity fade, no backdrop-filter */}
+            <motion.div
+              key="lightbox"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="fixed inset-0 z-50 flex justify-center"
+              style={{ alignItems: 'flex-start', overflowY: 'auto', paddingTop: '2rem', paddingBottom: '2rem', pointerEvents: 'none' }}
+            >
+
+            {/* Flip card — click anywhere to close */}
+            <div style={{ perspective: '1200px', margin: 'auto', position: 'relative', zIndex: 1, pointerEvents: 'auto' }} onClick={() => setSelectedEvent(null)}>
               <motion.div
                 initial={{ rotateY: -90, opacity: 0 }}
                 animate={{ rotateY: 0, opacity: 1 }}
+                exit={{ rotateY: 90, opacity: 0, transition: { duration: 0.2, ease: 'easeIn' } }}
                 transition={{ type: 'spring', damping: 22, stiffness: 130, delay: 0.08 }}
                 className="flex flex-col items-center gap-5"
                 style={{ width: 'min(380px, 88vw)' }}
@@ -202,16 +219,6 @@ export default function EventsContent({ upcoming, past }: { upcoming: SanityEven
                   className="relative w-full overflow-hidden rounded-xl border border-neutral-700/50"
                   style={{ aspectRatio: '2/3', background: '#111' }}
                 >
-                  {/* X button */}
-                  <button
-                    onClick={e => { e.stopPropagation(); setSelectedEvent(null) }}
-                    className="text-white/70 transition-colors"
-                    style={{ position: 'absolute', top: '0.5rem', left: '0.5rem', zIndex: 10, fontSize: '16px', lineHeight: 1, padding: '0.25rem' }}
-                    onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#fff' }}
-                    onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.7)' }}
-                  >
-                    ✕
-                  </button>
                   {selectedEvent.posterUrl ? (
                     <Image
                       src={selectedEvent.posterUrl}
@@ -227,11 +234,6 @@ export default function EventsContent({ upcoming, past }: { upcoming: SanityEven
                     </div>
                   )}
                 </div>
-
-                {/* Full description */}
-                {selectedEvent.description && (
-                  <p className="w-full text-sm text-muted-foreground text-center" style={{ lineHeight: '1.6' }}>{selectedEvent.description}</p>
-                )}
 
                 {/* Flashing ticket button */}
                 {selectedEvent.ticketUrl ? (
@@ -249,9 +251,17 @@ export default function EventsContent({ upcoming, past }: { upcoming: SanityEven
                 ) : (
                   <p className="text-xs tracking-[0.2em] uppercase text-muted-foreground/50">Free admission</p>
                 )}
+
+                {/* Full description */}
+                {selectedEvent.description && (
+                  <p className="w-full text-sm text-muted-foreground text-center" style={{ lineHeight: '1.6' }}>{selectedEvent.description}</p>
+                )}
+
+                
               </motion.div>
             </div>
           </motion.div>
+        </>
         )}
       </AnimatePresence>
     </div>

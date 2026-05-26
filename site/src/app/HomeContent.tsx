@@ -15,17 +15,27 @@ type Artist = {
   photoUrl?: string
 }
 
+type SanityEvent = {
+  _id: string
+  title: string
+  date: string
+  venue: string
+  time?: string
+  type: string
+  ticketUrl?: string
+}
+
+const MONTHS = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC']
+function parseDateParts(dateStr: string) {
+  const [, mm, dd] = dateStr.split('-')
+  return { month: MONTHS[parseInt(mm) - 1], day: dd }
+}
+
 const roleStyle: Record<string, React.CSSProperties> = {
   Artist:       { color: '#60a5fa', borderColor: 'rgba(96,165,250,0.4)' },
   Engineer:     { color: '#34d399', borderColor: 'rgba(52,211,153,0.4)' },
   Videographer: { color: '#fbbf24', borderColor: 'rgba(251,191,36,0.4)' },
 }
-
-const eventsPreview = [
-  { month: "Jun", day: "14", title: "Summer Sessions Vol. 1", venue: "Capital Wave Studio, Victoria", type: "Showcase" },
-  { month: "Jul", day: "04", title: "Independence Night Live", venue: "The Royal Theatre, Victoria", type: "Concert" },
-  { month: "Jul", day: "19", title: "Artist Showcase #3", venue: "Capital Wave Studio, Victoria", type: "Showcase" },
-]
 
 const servicesOverview = [
   { title: "Audio Recording", subtitle: "Capture Every Detail", description: "State-of-the-art rooms, acoustically treated booths, and experienced engineers on every session." },
@@ -34,7 +44,7 @@ const servicesOverview = [
   { title: "Video Production", subtitle: "Visual Storytelling", description: "Music videos, live sessions, and promo content with cinematic colour grading." },
 ]
 
-export default function HomeContent({ rosterPreview }: { rosterPreview: Artist[] }) {
+export default function HomeContent({ rosterPreview, upcomingEvents }: { rosterPreview: Artist[], upcomingEvents: SanityEvent[] }) {
   return (
     <div className="flex min-h-[100dvh] flex-col">
       <main className="flex-1">
@@ -191,26 +201,83 @@ export default function HomeContent({ rosterPreview }: { rosterPreview: Artist[]
           </motion.div>
 
           <div className="max-w-3xl mx-auto flex flex-col mb-14">
-            {eventsPreview.map((event, i) => (
-              <motion.div
-                key={event.title}
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.5, ease: 'easeOut', delay: i * 0.1 }}
-                className={`flex items-center gap-6 py-6 ${i < eventsPreview.length - 1 ? 'border-b border-neutral-800' : ''}`}
-              >
-                <div className="text-center min-w-[3.5rem]">
-                  <p className="text-xs tracking-[0.2em] uppercase text-muted-foreground">{event.month}</p>
-                  <p className="text-3xl font-black leading-none">{event.day}</p>
-                </div>
-                <div className="flex-1">
-                  <p className="font-black tracking-wider uppercase text-sm md:text-base">{event.title}</p>
-                  <p className="text-xs tracking-[0.2em] uppercase text-muted-foreground mt-1">{event.venue}</p>
-                </div>
-                <span className="text-xs tracking-[0.2em] uppercase text-muted-foreground border border-neutral-700/60 rounded-full px-3 py-1 shrink-0">{event.type}</span>
-              </motion.div>
-            ))}
+            {upcomingEvents.length === 0 ? (
+              <p className="text-sm text-muted-foreground tracking-wider text-center py-8">No upcoming events at this time.</p>
+            ) : (
+              upcomingEvents.map((event, i) => {
+                const { month, day } = parseDateParts(event.date)
+                return (
+                  <div key={event._id}>
+                    <motion.div
+                      initial={{ opacity: 0, x: -30 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      whileHover={{
+                        x: 8,
+                        backgroundColor: 'rgba(255,255,255,0.04)',
+                        transition: { duration: 0.2, ease: 'easeOut' },
+                      }}
+                      viewport={{ once: true, amount: 0.3 }}
+                      transition={{ duration: 0.5, ease: 'easeOut', delay: i * 0.1 }}
+                      className="flex items-center gap-8 cursor-pointer"
+                      style={{
+                        paddingTop: '1.75rem',
+                        paddingBottom: '1.75rem',
+                        paddingLeft: '1rem',
+                        paddingRight: '1rem',
+                        marginLeft: '-1rem',
+                        marginRight: '-1rem',
+                        borderRadius: '12px',
+                      }}
+                    >
+                      <div className="text-center shrink-0" style={{ minWidth: '3.5rem' }}>
+                        <p className="text-xs tracking-[0.2em] uppercase text-muted-foreground">{month}</p>
+                        <p className="text-4xl font-black leading-none">{day}</p>
+                        {event.time && (
+                          <p className="text-xs tracking-[0.15em] uppercase text-muted-foreground/70 mt-1">{event.time}</p>
+                        )}
+                      </div>
+                      <div className="flex-1" style={{ minWidth: 0 }}>
+                        <div className="flex flex-wrap items-center gap-3 mb-1">
+                          <p className="font-black tracking-wider uppercase text-base">{event.title}</p>
+                          <span className="hidden sm:inline text-xs tracking-[0.2em] uppercase text-muted-foreground border border-neutral-700/60 rounded-full px-3 py-0.5 shrink-0">{event.type}</span>
+                        </div>
+                        <p className="text-xs tracking-[0.2em] uppercase text-muted-foreground">{event.venue}</p>
+                      </div>
+
+                      {/* Quick ticket link */}
+                      {event.ticketUrl && (
+                        <a
+                          href={event.ticketUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="shrink-0 flex items-center gap-1.5 text-xs tracking-[0.15em] uppercase border rounded-full text-muted-foreground transition-colors whitespace-nowrap"
+                          style={{
+                            borderColor: 'rgba(115,115,115,0.5)',
+                            paddingLeft: '1rem',
+                            paddingRight: '1rem',
+                            paddingTop: '0.5rem',
+                            paddingBottom: '0.5rem',
+                          }}
+                          onMouseEnter={e => {
+                            ;(e.currentTarget as HTMLAnchorElement).style.color = '#fff'
+                            ;(e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(163,163,163,0.8)'
+                          }}
+                          onMouseLeave={e => {
+                            ;(e.currentTarget as HTMLAnchorElement).style.color = ''
+                            ;(e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(115,115,115,0.5)'
+                          }}
+                        >
+                          Get tickets <span style={{ fontSize: '14px', lineHeight: 1 }}>»</span>
+                        </a>
+                      )}
+                    </motion.div>
+                    {i < upcomingEvents.length - 1 && (
+                      <div className="border-b border-neutral-800" />
+                    )}
+                  </div>
+                )
+              })
+            )}
           </div>
 
           <motion.div
