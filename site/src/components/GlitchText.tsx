@@ -95,12 +95,12 @@ const GlitchText: React.FC<GlitchTextProps> = ({
     <div className="relative">
       <motion.h1
         className={`
-          font-bold text-2xl md:text-2xl lg:text-4xl
+          font-bold text-4xl md:text-5xl
           font-mono tracking-wider
-          text-white
+          text-white whitespace-nowrap
           cursor-not-allowed
           select-none
-          transition-all duration-300
+          transition-[color,filter] duration-300
           ${className}
         `}
         style={{

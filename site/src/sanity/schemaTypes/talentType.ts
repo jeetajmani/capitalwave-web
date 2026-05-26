@@ -1,0 +1,44 @@
+import {defineField, defineType} from 'sanity'
+
+export const talentType = defineType({
+  name: 'talent',
+  title: 'Talent',
+  type: 'document',
+  fields: [
+    defineField({
+      name: 'name',
+      title: 'Name',
+      type: 'string',
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: 'role',
+      title: 'Role',
+      type: 'string',
+      options: {
+        list: ['Artist', 'Engineer', 'Videographer'],
+        layout: 'radio',
+      },
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: 'genre',
+      title: 'Genre',
+      type: 'string',
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: 'photo',
+      title: 'Photo',
+      type: 'image',
+      options: {hotspot: true},
+    }),
+  ],
+  preview: {
+    select: {
+      title: 'name',
+      subtitle: 'genre',
+      media: 'photo',
+    },
+  },
+})

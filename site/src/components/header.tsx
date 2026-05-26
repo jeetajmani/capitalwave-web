@@ -18,7 +18,9 @@ const Header = () => {
 
     useLayoutEffect(() => {
         if (headerRef.current) {
-            setHeaderHeight(headerRef.current.offsetHeight)
+            const h = headerRef.current.offsetHeight
+            setHeaderHeight(h)
+            document.documentElement.style.setProperty('--header-height', `${h}px`)
         }
     }, [])
 
@@ -26,7 +28,9 @@ const Header = () => {
     useLayoutEffect(() => {
         const handleResize = () => {
             if (headerRef.current) {
-                setHeaderHeight(headerRef.current.offsetHeight)
+                const h = headerRef.current.offsetHeight
+                setHeaderHeight(h)
+                document.documentElement.style.setProperty('--header-height', `${h}px`)
             }
         }
         window.addEventListener('resize', handleResize)
@@ -54,6 +58,7 @@ const Header = () => {
                                     alt="Capital Wave Logo"
                                     width={10000}
                                     height={10000}
+                                    loading="eager"
                                     className="h-[0.9em] w-auto object-contain align-baseline"
                                 />
                             </Link>
@@ -120,19 +125,19 @@ const Header = () => {
                             }
                             e.stopPropagation();
                         }}>
-                            <Link href="/services" onClick={() => setMobileMenuOpen(false)} className="py-3 font-medium tracking-widest uppercase text-sm text-muted-foreground transition-colors hover:text-foreground">
+                            <Link href="/services" onClick={() => setMobileMenuOpen(false)} className="py-3 font-medium tracking-widest uppercase text-[22px] text-muted-foreground transition-colors hover:text-foreground">
                                 Services
                             </Link>
-                            <Link href="/roster" className="py-3 font-medium tracking-widest uppercase text-sm text-muted-foreground transition-colors hover:text-foreground">
+                            <Link href="/roster" className="py-3 font-medium tracking-widest uppercase text-[22px] text-muted-foreground transition-colors hover:text-foreground">
                                 Roster
                             </Link>
-                            <Link href="/events" className="py-3 font-medium tracking-widest uppercase text-sm text-muted-foreground transition-colors hover:text-foreground">
+                            <Link href="/events" className="py-3 font-medium tracking-widest uppercase text-[22px] text-muted-foreground transition-colors hover:text-foreground">
                                 Events
                             </Link>
                             <div className="flex flex-col gap-2 pt-2 items-center">
                                 <AnimatedFlashButton
                                     text="Book Now"
-                                    className="rounded-full px-10 py-9 text-3xl"
+                                    className="rounded-full px-10 py-9 text-[26px]"
                                     variant="outline"
                                     onClick={() => setMobileMenuOpen(false)}
                                 />

@@ -38,21 +38,20 @@ export default function Page() {
           transition={{ duration: 1, ease: 'easeInOut' }}
           className="flex flex-col items-center justify-center"
         >
-          <div className="flex flex-col items-center justify-center w-full bg-gradient-to-b from-black to-gray-900 pb-10">
-            <div className="flex flex-col items-center w-full h-[220px] sm:h-[280px] md:h-[320px] lg:h-[420px] xl:h-[480px] 2xl:h-[440px]">
+          <div className="flex flex-col items-center w-full bg-gradient-to-b from-black to-gray-900 pt-8 pb-10 justify-center gap-6 py-8" style={{ height: 'calc(100dvh - var(--header-height, 0px))' }}>
+            <div className="flex flex-col items-center w-full h-[280px] sm:h-[240px] md:h-[280px] lg:h-[340px] xl:h-[380px] 2xl:h-[420px]">
               <AnimatedLogo />
             </div>
-            <div className="text-foreground font-bold text-center -mt-4">
-              <GlitchText
-                text="CAPITAL WAVE ENTERTAINMENT"
-                baseGlitchSpeed={3000} />
+            <div className="flex flex-col items-center gap-5 sm:gap-6">
+              <div className="flex flex-col items-center gap-1">
+                <GlitchText text="CAPITAL WAVE" baseGlitchSpeed={3000} />
+                <GlitchText text="ENTERTAINMENT" baseGlitchSpeed={3700} />
+                <p className="text-muted-foreground tracking-[0.15em] sm:tracking-[0.2em] uppercase text-xs text-center w-full mt-3">
+                  Victoria&apos;s Premier Music{' '}<br className="md:hidden" />Studio &amp; Record Label
+                </p>
+              </div>
             </div>
-            <p className="text-muted-foreground tracking-[0.25em] uppercase text-xs mt-3 mb-1">
-              Victoria&apos;s Premier Music Studio &amp; Record Label
-            </p>
-            <div className="mt-5">
-              <AnimatedFlashButton text="Book Now" size="lg" variant="outline" />
-            </div>
+            <AnimatedFlashButton text="Book Now" size="lg" className="h-14 px-10 text-xl sm:h-12 sm:px-6 sm:text-lg" variant="outline" />
           </div>
         </motion.div>
 
