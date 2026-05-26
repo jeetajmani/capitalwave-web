@@ -7,6 +7,7 @@ export default defineConfig({
   title: 'Capital Wave Studio',
   projectId: '8h2ezv9l',
   dataset: 'production',
+  basePath: '/admin',
   plugins: [structureTool()],
   schema: {
     types: schemaTypes,
