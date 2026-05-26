@@ -90,7 +90,7 @@ const Header = () => {
                     </nav>
                     <div className="hidden md:flex flex-1 gap-4 items-center justify-end justify-self-end">
                         <Link href="/book">
-                            <AnimatedFlashButton text="Book Now" className="rounded-full" variant="outline" />
+                            <AnimatedFlashButton text="Book Now" variant="outline" />
                         </Link>
                     </div>
                     <div className="flex items-center gap-4 md:hidden col-span-2 col-start-3 justify-end">
@@ -137,7 +137,7 @@ const Header = () => {
                             <div className="flex flex-col gap-2 pt-2 items-center">
                                 <AnimatedFlashButton
                                     text="Book Now"
-                                    className="rounded-full px-10 py-9 text-[26px]"
+                                    className="px-10 py-9 text-[26px]"
                                     variant="outline"
                                     onClick={() => setMobileMenuOpen(false)}
                                 />
