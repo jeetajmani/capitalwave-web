@@ -18,6 +18,12 @@ export const eventType = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: 'time',
+      title: 'Time',
+      type: 'string',
+      description: 'e.g. 8:00 PM or Doors 7PM / Show 8PM',
+    }),
+    defineField({
       name: 'venue',
       title: 'Venue',
       type: 'string',
@@ -40,6 +46,12 @@ export const eventType = defineType({
       title: 'Ticket URL',
       type: 'url',
       description: 'Link to purchase tickets (leave empty if free or no tickets)',
+    }),
+    defineField({
+      name: 'poster',
+      title: 'Event Poster',
+      type: 'image',
+      options: { hotspot: true },
     }),
   ],
   preview: {
