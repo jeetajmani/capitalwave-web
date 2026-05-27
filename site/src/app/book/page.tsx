@@ -15,15 +15,33 @@ const serviceOptions = [
 export default function BookPage() {
   const [form, setForm] = useState({ name: '', email: '', service: '', date: '', message: '' })
   const [submitted, setSubmitted] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // TODO: wire up to email/backend
-    setSubmitted(true)
+    setLoading(true)
+    setError('')
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.error || 'Failed to send.')
+      }
+      setSubmitted(true)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -116,7 +134,8 @@ export default function BookPage() {
                 />
               </div>
               <div className="pt-2">
-                <AnimatedFlashButton text="Send Request" variant="outline" size="lg" />
+                <AnimatedFlashButton text={loading ? 'Sending...' : 'Send Request'} variant="outline" size="lg" />
+                {error && <p className="text-sm text-red-400 mt-4 tracking-wide">{error}</p>}
               </div>
             </form>
           )}

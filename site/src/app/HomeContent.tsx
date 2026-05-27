@@ -69,7 +69,9 @@ export default function HomeContent({ rosterPreview, upcomingEvents }: { rosterP
                 </p>
               </div>
             </div>
-            <AnimatedFlashButton text="Book Now" size="lg" className="h-14 px-10 text-xl sm:h-12 sm:px-6 sm:text-lg" variant="outline" />
+            <Link href="/book">
+              <AnimatedFlashButton text="Book Now" size="lg" className="h-14 px-10 text-xl sm:h-12 sm:px-6 sm:text-lg" variant="outline" />
+            </Link>
           </div>
         </motion.div>
 

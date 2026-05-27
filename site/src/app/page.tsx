@@ -1,6 +1,8 @@
 import { client } from '@/sanity/client'
 import HomeContent from './HomeContent'
 
+export const revalidate = 3600
+
 const rosterQuery = `*[_type == "talent"] | order(name asc)[0..3] {
   _id,
   name,
