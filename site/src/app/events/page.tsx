@@ -1,6 +1,8 @@
 import { client } from '@/sanity/client'
 import EventsContent from './EventsContent'
 
+export const revalidate = 3600
+
 type SanityEvent = {
   _id: string
   title: string
