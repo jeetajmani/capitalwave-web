@@ -2,6 +2,7 @@
 
 import { useState, useRef, useLayoutEffect } from "react"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { AnimatePresence, motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { AnimatedFlashButton } from "@/components/ui/flashbutton"
@@ -15,6 +16,15 @@ const Header = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
     const [headerHeight, setHeaderHeight] = useState(0)
     const headerRef = useRef<HTMLElement | null>(null)
+    const pathname = usePathname()
+
+    const handleHomeClick = (e: React.MouseEvent) => {
+        setMobileMenuOpen(false)
+        if (pathname === "/") {
+            e.preventDefault()
+            window.scrollTo({ top: 0, behavior: "smooth" })
+        }
+    }
 
     useLayoutEffect(() => {
         if (headerRef.current) {
@@ -52,7 +62,7 @@ const Header = () => {
                     <div className="font-black text-2xl md:text-lg lg:text-xl xl:text-2xl 2xl:text-3xl text-foreground ">
 
                         <div className="flex items-center gap-2">
-                            <Link href="/" onClick={() => setMobileMenuOpen(false)}>
+                            <Link href="/" onClick={handleHomeClick}>
                                 <Image
                                     src="/images/header_logo.png"
                                     alt="Capital Wave Logo"
@@ -62,7 +72,7 @@ const Header = () => {
                                     className="h-[0.9em] w-auto object-contain align-baseline"
                                 />
                             </Link>
-                            <Link href="/" onClick={() => setMobileMenuOpen(false)}>
+                            <Link href="/" onClick={handleHomeClick}>
                                 <span className="whitespace-nowrap tracking-widest text-white">CAPITAL WAVE</span>
                             </Link>
                         </div>

@@ -38,7 +38,7 @@ const roleStyle: Record<string, React.CSSProperties> = {
 }
 
 const servicesOverview = [
-  { title: "Audio Recording", subtitle: "Capture Every Detail", description: "State-of-the-art rooms, acoustically treated booths, and experienced engineers on every session." },
+  { title: "Audio Recording", subtitle: "Capture Every Detail", description: "State-of-the-art room, acoustically treated booth, and experienced engineers on every session." },
   { title: "Music Production", subtitle: "Shape Your Sound", description: "Custom beats and full arrangements across all genres, from concept to master." },
   { title: "Mixing & Mastering", subtitle: "Industry-Ready Sound", description: "Streaming-optimised masters with reference-level clarity, depth, and revisions included." },
   { title: "Video Production", subtitle: "Visual Storytelling", description: "Music videos, live sessions, and promo content with cinematic colour grading." },
@@ -122,6 +122,33 @@ export default function HomeContent({ rosterPreview, upcomingEvents }: { rosterP
 
         {/* Roster Preview */}
         <section id="roster" className="w-full py-24 px-6 lg:px-20 border-t border-neutral-800">
+          <style>{`
+            .artist-info {
+              display: grid;
+              grid-template-columns: 1fr;
+              grid-template-areas: "name" "genre" "pill";
+              row-gap: 4px;
+            }
+            .artist-info > .artist-name { grid-area: name; }
+            .artist-info > .artist-genre { grid-area: genre; }
+            .artist-info > .artist-pill {
+              grid-area: pill;
+              justify-self: start;
+              margin-top: 4px;
+            }
+            @media (min-width: 1024px) {
+              .artist-info {
+                grid-template-columns: 1fr auto;
+                column-gap: 12px;
+                grid-template-areas: "name pill" "genre genre";
+              }
+              .artist-info > .artist-pill {
+                justify-self: end;
+                margin-top: 0;
+                align-self: center;
+              }
+            }
+          `}</style>
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -151,6 +178,7 @@ export default function HomeContent({ rosterPreview, upcomingEvents }: { rosterP
                       fill
                       className="object-cover"
                       sizes="(max-width: 768px) 50vw, 25vw"
+                      loading="eager"
                     />
                   ) : (
                     <div className="flex items-center justify-center h-full">
@@ -158,19 +186,27 @@ export default function HomeContent({ rosterPreview, upcomingEvents }: { rosterP
                     </div>
                   )}
                 </div>
-                <div>
-                  <div className="flex items-center justify-between gap-2">
-                    <p className="font-black tracking-wider uppercase text-sm">{artist.name}</p>
-                    {artist.role && (
-                      <span
-                        className="inline-flex items-center uppercase border rounded-full px-3 py-1 shrink-0"
-                        style={{ fontSize: '10px', letterSpacing: '0.1em', ...(roleStyle[artist.role] ?? { color: '#a3a3a3', borderColor: 'rgba(163,163,163,0.4)' }) }}
-                      >
-                        {artist.role}
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-xs tracking-[0.2em] uppercase text-muted-foreground">{artist.genre}</p>
+                <div className="artist-info">
+                  <p className="artist-name font-black tracking-wider uppercase text-sm">{artist.name}</p>
+                  <p className="artist-genre text-xs tracking-[0.2em] uppercase text-muted-foreground">{artist.genre}</p>
+                  {artist.role && (
+                    <span
+                      className="artist-pill"
+                      style={{
+                        fontSize: '10px',
+                        letterSpacing: '0.1em',
+                        padding: '2px 8px',
+                        border: '1px solid',
+                        borderRadius: '9999px',
+                        textTransform: 'uppercase',
+                        width: 'fit-content',
+                        display: 'inline-block',
+                        ...(roleStyle[artist.role] ?? { color: '#a3a3a3', borderColor: 'rgba(163,163,163,0.4)' })
+                      }}
+                    >
+                      {artist.role}
+                    </span>
+                  )}
                 </div>
               </motion.div>
             ))}
@@ -210,17 +246,20 @@ export default function HomeContent({ rosterPreview, upcomingEvents }: { rosterP
                 const { month, day } = parseDateParts(event.date)
                 return (
                   <div key={event._id}>
-                    <motion.div
+                    <motion.a
+                      href={event.ticketUrl || undefined}
+                      target={event.ticketUrl ? '_blank' : undefined}
+                      rel={event.ticketUrl ? 'noopener noreferrer' : undefined}
                       initial={{ opacity: 0, x: -30 }}
                       whileInView={{ opacity: 1, x: 0 }}
-                      whileHover={{
+                      whileHover={event.ticketUrl ? {
                         x: 8,
                         backgroundColor: 'rgba(255,255,255,0.04)',
                         transition: { duration: 0.2, ease: 'easeOut' },
-                      }}
+                      } : undefined}
                       viewport={{ once: true, amount: 0.3 }}
                       transition={{ duration: 0.5, ease: 'easeOut', delay: i * 0.1 }}
-                      className="flex items-center gap-8 cursor-pointer"
+                      className={`flex items-center gap-8 ${event.ticketUrl ? 'cursor-pointer' : ''}`}
                       style={{
                         paddingTop: '1.75rem',
                         paddingBottom: '1.75rem',
@@ -229,6 +268,8 @@ export default function HomeContent({ rosterPreview, upcomingEvents }: { rosterP
                         marginLeft: '-1rem',
                         marginRight: '-1rem',
                         borderRadius: '12px',
+                        textDecoration: 'none',
+                        color: 'inherit',
                       }}
                     >
                       <div className="text-center shrink-0" style={{ minWidth: '3.5rem' }}>
@@ -246,13 +287,10 @@ export default function HomeContent({ rosterPreview, upcomingEvents }: { rosterP
                         <p className="text-xs tracking-[0.2em] uppercase text-muted-foreground">{event.venue}</p>
                       </div>
 
-                      {/* Quick ticket link */}
+                      {/* Quick ticket indicator */}
                       {event.ticketUrl && (
-                        <a
-                          href={event.ticketUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="shrink-0 flex items-center gap-1.5 text-xs tracking-[0.15em] uppercase border rounded-full text-muted-foreground transition-colors whitespace-nowrap"
+                        <span
+                          className="shrink-0 flex items-center gap-1.5 text-xs tracking-[0.15em] uppercase border rounded-full text-muted-foreground whitespace-nowrap"
                           style={{
                             borderColor: 'rgba(115,115,115,0.5)',
                             paddingLeft: '1rem',
@@ -260,19 +298,11 @@ export default function HomeContent({ rosterPreview, upcomingEvents }: { rosterP
                             paddingTop: '0.5rem',
                             paddingBottom: '0.5rem',
                           }}
-                          onMouseEnter={e => {
-                            ;(e.currentTarget as HTMLAnchorElement).style.color = '#fff'
-                            ;(e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(163,163,163,0.8)'
-                          }}
-                          onMouseLeave={e => {
-                            ;(e.currentTarget as HTMLAnchorElement).style.color = ''
-                            ;(e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(115,115,115,0.5)'
-                          }}
                         >
                           Get tickets <span style={{ fontSize: '14px', lineHeight: 1 }}>»</span>
-                        </a>
+                        </span>
                       )}
-                    </motion.div>
+                    </motion.a>
                     {i < upcomingEvents.length - 1 && (
                       <div className="border-b border-neutral-800" />
                     )}

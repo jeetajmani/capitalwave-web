@@ -8,7 +8,7 @@ const services = [
     subtitle: "Capture Every Detail",
     bullets: [
       "State-of-the-art recording equipment",
-      "Acoustically treated live rooms & isolation booths",
+      "Acoustically treated live room & isolation booth",
       "Experienced audio engineers on every session",
       "Multi-track recording & session management",
     ],

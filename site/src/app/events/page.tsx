@@ -1,7 +1,13 @@
+import type { Metadata } from 'next'
 import { client } from '@/sanity/client'
 import EventsContent from './EventsContent'
 
 export const revalidate = 3600
+
+export const metadata: Metadata = {
+  title: 'Events',
+  description: 'Upcoming shows, live sessions, and events from Capital Wave Studio artists in Victoria, BC.',
+}
 
 type SanityEvent = {
   _id: string

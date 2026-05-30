@@ -65,6 +65,33 @@ export default function RosterContent({ artists }: { artists: Artist[] }) {
 
   return (
     <div className="flex min-h-[100dvh] flex-col">
+      <style>{`
+        .artist-info {
+          display: grid;
+          grid-template-columns: 1fr;
+          grid-template-areas: "name" "genre" "pill";
+          row-gap: 4px;
+        }
+        .artist-info > .artist-name { grid-area: name; }
+        .artist-info > .artist-genre { grid-area: genre; }
+        .artist-info > .artist-pill {
+          grid-area: pill;
+          justify-self: start;
+          margin-top: 4px;
+        }
+        @media (min-width: 1024px) {
+          .artist-info {
+            grid-template-columns: 1fr auto;
+            column-gap: 12px;
+            grid-template-areas: "name pill" "genre genre";
+          }
+          .artist-info > .artist-pill {
+            justify-self: end;
+            margin-top: 0;
+            align-self: center;
+          }
+        }
+      `}</style>
       <main className="flex-1 px-6 lg:px-20 pt-16 pb-24">
 
         <motion.div
@@ -206,19 +233,27 @@ export default function RosterContent({ artists }: { artists: Artist[] }) {
                     </div>
                   )}
                 </div>
-                <div>
-                  <div className="flex items-center justify-between gap-2">
-                    <p className="font-black tracking-wider uppercase text-sm">{artist.name}</p>
-                    {artist.role && (
-                      <span
-                        className="inline-flex items-center uppercase border rounded-full px-3 py-1 shrink-0"
-                        style={{ fontSize: '10px', letterSpacing: '0.1em', ...(roleStyle[artist.role] ?? { color: '#a3a3a3', borderColor: 'rgba(163,163,163,0.4)' }) }}
-                      >
-                        {artist.role}
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-xs tracking-[0.2em] uppercase text-muted-foreground">{artist.genre}</p>
+                <div className="artist-info">
+                  <p className="artist-name font-black tracking-wider uppercase text-sm">{artist.name}</p>
+                  <p className="artist-genre text-xs tracking-[0.2em] uppercase text-muted-foreground">{artist.genre}</p>
+                  {artist.role && (
+                    <span
+                      className="artist-pill"
+                      style={{
+                        fontSize: '10px',
+                        letterSpacing: '0.1em',
+                        padding: '2px 8px',
+                        border: '1px solid',
+                        borderRadius: '9999px',
+                        textTransform: 'uppercase',
+                        width: 'fit-content',
+                        display: 'inline-block',
+                        ...(roleStyle[artist.role] ?? { color: '#a3a3a3', borderColor: 'rgba(163,163,163,0.4)' })
+                      }}
+                    >
+                      {artist.role}
+                    </span>
+                  )}
                 </div>
               </motion.div>
             ))}
