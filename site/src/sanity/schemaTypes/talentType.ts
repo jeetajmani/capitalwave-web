@@ -1,4 +1,5 @@
 import {defineField, defineType} from 'sanity'
+import {ImageFieldWithSize} from '../components/ImageFieldWithSize'
 
 export const talentType = defineType({
   name: 'talent',
@@ -32,6 +33,7 @@ export const talentType = defineType({
       title: 'Photo',
       type: 'image',
       options: {hotspot: true},
+      components: {field: ImageFieldWithSize},
     }),
   ],
   preview: {

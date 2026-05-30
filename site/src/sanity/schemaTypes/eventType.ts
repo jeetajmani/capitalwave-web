@@ -1,4 +1,5 @@
 import {defineField, defineType} from 'sanity'
+import {ImageFieldWithSize} from '../components/ImageFieldWithSize'
 
 export const eventType = defineType({
   name: 'event',
@@ -52,6 +53,7 @@ export const eventType = defineType({
       title: 'Event Poster',
       type: 'image',
       options: { hotspot: true },
+      components: { field: ImageFieldWithSize },
     }),
   ],
   preview: {
