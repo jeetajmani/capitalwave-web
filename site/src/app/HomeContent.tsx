@@ -178,7 +178,6 @@ export default function HomeContent({ rosterPreview, upcomingEvents }: { rosterP
                       fill
                       className="object-cover"
                       sizes="(max-width: 768px) 50vw, 25vw"
-                      loading="eager"
                     />
                   ) : (
                     <div className="flex items-center justify-center h-full">

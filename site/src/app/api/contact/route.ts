@@ -2,6 +2,19 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+function formatDate(date?: string): string | null {
+  if (!date) return null;
+  // date arrives as "YYYY-MM-DD"; parse as local to avoid timezone shifting the day
+  const [y, m, d] = date.split("-").map(Number);
+  if (!y || !m || !d) return date;
+  return new Date(y, m - 1, d).toLocaleDateString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
+
 async function verifyTurnstile(token: string, ip?: string | null): Promise<boolean> {
   const secret = process.env.TURNSTILE_SECRET_KEY;
   if (!secret) return true; // Turnstile not configured — skip
@@ -49,6 +62,7 @@ export async function POST(request: Request) {
       );
     }
 
+    const prettyDate = formatDate(date);
     const fromAddress = "Capital Wave Studio <booking@mail.capitalwavestudio.com>";
 
     // Notify the studio
@@ -61,7 +75,8 @@ export async function POST(request: Request) {
 New booking inquiry from the Capital Wave Studio website:
 
 Name: ${name}
-Email: ${email}${service ? `\nService: ${service}` : ''}${date ? `\nPreferred Date: ${date}` : ''}
+Email: ${email}${service ? `\nService: ${service}` : ''}
+Preferred Date: ${prettyDate ?? 'Not specified'}
 
 Message:
 ${message}
@@ -81,7 +96,7 @@ Thanks for reaching out to Capital Wave Studio. We've received your booking inqu
 
 Here's a copy of what you sent us:
 
-${service ? `Service: ${service}\n` : ''}${date ? `Preferred Date: ${date}\n` : ''}
+${service ? `Service: ${service}\n` : ''}${prettyDate ? `Preferred Date: ${prettyDate}\n` : ''}
 Message:
 ${message}
 

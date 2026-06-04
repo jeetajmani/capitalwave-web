@@ -9,6 +9,9 @@ type Artist = {
   name: string
   genre: string
   role?: string
+  bio?: string
+  instagram?: string
+  spotify?: string
   photoUrl?: string
 }
 
@@ -16,12 +19,14 @@ const roleStyle: Record<string, React.CSSProperties> = {
   Artist:       { color: '#60a5fa', borderColor: 'rgba(96,165,250,0.4)' },
   Engineer:     { color: '#34d399', borderColor: 'rgba(52,211,153,0.4)' },
   Videographer: { color: '#fbbf24', borderColor: 'rgba(251,191,36,0.4)' },
+  Management:   { color: '#fb923c', borderColor: 'rgba(251,146,60,0.4)' },
 }
 
 const roleActiveStyle: Record<string, React.CSSProperties> = {
   Artist:       { color: '#fff', backgroundColor: '#60a5fa', borderColor: '#60a5fa' },
   Engineer:     { color: '#fff', backgroundColor: '#34d399', borderColor: '#34d399' },
   Videographer: { color: '#fff', backgroundColor: '#fbbf24', borderColor: '#fbbf24' },
+  Management:   { color: '#fff', backgroundColor: '#fb923c', borderColor: '#fb923c' },
 }
 
 const SORT_OPTIONS = [
@@ -29,13 +34,14 @@ const SORT_OPTIONS = [
   { value: 'za',   label: 'Z → A' },
 ]
 
-const ALL_ROLES = ['Artist', 'Engineer', 'Videographer']
+const ALL_ROLES = ['Artist', 'Engineer', 'Videographer', 'Management']
 
 export default function RosterContent({ artists }: { artists: Artist[] }) {
   const [search, setSearch]           = useState('')
   const [activeRoles, setActiveRoles] = useState<string[]>([])
   const [activeGenres, setActiveGenres] = useState<string[]>([])
   const [sort, setSort]               = useState('az')
+  const [flippedId, setFlippedId]     = useState<string | null>(null)
 
   const genres = useMemo(() =>
     [...new Set(artists.map(a => a.genre).filter(Boolean))].sort(),
@@ -214,24 +220,88 @@ export default function RosterContent({ artists }: { artists: Artist[] }) {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.35, ease: 'easeOut', delay: i * 0.04 }}
-                className="flex flex-col gap-3 group cursor-pointer"
+                className="flex flex-col gap-3 group"
               >
-                <div className="relative aspect-[3/4] rounded-xl bg-neutral-800/60 border border-neutral-700/40 overflow-hidden group-hover:border-neutral-600/60 transition-colors duration-300">
-                  {artist.photoUrl ? (
-                    <Image
-                      src={artist.photoUrl}
-                      alt={artist.name}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                      loading={i === 0 ? 'eager' : 'lazy'}
-                      priority={i === 0}
-                    />
-                  ) : (
-                    <div className="flex items-center justify-center h-full">
-                      <span className="text-muted-foreground/30 text-xs tracking-[0.3em] uppercase">Photo</span>
+                <div
+                  className="relative aspect-[3/4] cursor-pointer"
+                  style={{ perspective: '1200px' }}
+                  onClick={() => setFlippedId(prev => prev === artist._id ? null : artist._id)}
+                >
+                  <motion.div
+                    animate={{ rotateY: flippedId === artist._id ? 180 : 0 }}
+                    transition={{ type: 'spring', damping: 20, stiffness: 130 }}
+                    style={{ position: 'absolute', inset: 0, transformStyle: 'preserve-3d' }}
+                  >
+                    {/* Front — photo */}
+                    <div
+                      className="absolute inset-0 rounded-xl bg-neutral-800/60 border border-neutral-700/40 overflow-hidden group-hover:border-neutral-600/60 transition-colors duration-300"
+                      style={{ backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}
+                    >
+                      {artist.photoUrl ? (
+                        <Image
+                          src={artist.photoUrl}
+                          alt={artist.name}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                          priority={i < 4}
+                        />
+                      ) : (
+                        <div className="flex items-center justify-center h-full">
+                          <span className="text-muted-foreground/30 text-xs tracking-[0.3em] uppercase">Photo</span>
+                        </div>
+                      )}
                     </div>
-                  )}
+
+                    {/* Back — bio + socials */}
+                    <div
+                      className="absolute inset-0 rounded-xl bg-neutral-900 border border-neutral-700/60 overflow-hidden flex flex-col"
+                      style={{ backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden', transform: 'rotateY(180deg)', padding: 'clamp(16px, 8%, 36px)' }}
+                    >
+                      <p className="font-black tracking-wider uppercase text-sm mb-2 shrink-0">{artist.name}</p>
+                      <p className="text-xs text-muted-foreground flex-1 overflow-y-auto" style={{ lineHeight: 1.6 }}>
+                        {artist.bio || 'No bio yet.'}
+                      </p>
+                      {(artist.instagram || artist.spotify) && (
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 16, marginTop: 12, flexShrink: 0 }}>
+                          {artist.instagram && (
+                            <a
+                              href={artist.instagram}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={e => e.stopPropagation()}
+                              aria-label={`${artist.name} on Instagram`}
+                              style={{ display: 'inline-flex', color: '#a3a3a3', transition: 'color 0.2s' }}
+                              onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
+                              onMouseLeave={e => (e.currentTarget.style.color = '#a3a3a3')}
+                            >
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: 20, height: 20 }}>
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                              </svg>
+                            </a>
+                          )}
+                          {artist.spotify && (
+                            <a
+                              href={artist.spotify}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={e => e.stopPropagation()}
+                              aria-label={`${artist.name} on Spotify`}
+                              style={{ display: 'inline-flex', color: '#a3a3a3', transition: 'color 0.2s' }}
+                              onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
+                              onMouseLeave={e => (e.currentTarget.style.color = '#a3a3a3')}
+                            >
+                              <svg viewBox="0 0 24 24" fill="currentColor" style={{ width: 20, height: 20 }}>
+                                <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.84-.179-.96-.601-.122-.42.18-.84.6-.96 4.561-1.021 8.52-.6 11.64 1.32.42.18.479.66.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.42 1.56-.299.421-1.02.599-1.559.3z" />
+                              </svg>
+                            </a>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </motion.div>
                 </div>
                 <div className="artist-info">
                   <p className="artist-name font-black tracking-wider uppercase text-sm">{artist.name}</p>

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
+import { urlFor } from '@/sanity/image'
 
 const MONTHS = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC']
 
@@ -20,7 +21,8 @@ type SanityEvent = {
   type: string
   description?: string
   ticketUrl?: string
-  posterUrl?: string
+  poster?: { asset?: { _ref: string } }
+  posterLqip?: string
 }
 
 export default function EventsContent({ upcoming, past }: { upcoming: SanityEvent[], past: SanityEvent[] }) {
@@ -219,13 +221,15 @@ export default function EventsContent({ upcoming, past }: { upcoming: SanityEven
                   className="relative w-full overflow-hidden rounded-xl border border-neutral-700/50"
                   style={{ aspectRatio: '2/3', background: '#111' }}
                 >
-                  {selectedEvent.posterUrl ? (
+                  {selectedEvent.poster ? (
                     <Image
-                      src={selectedEvent.posterUrl}
+                      src={urlFor(selectedEvent.poster).width(800).format('webp').quality(85).url()}
                       alt={`${selectedEvent.title} poster`}
                       fill
                       className="object-cover"
                       sizes="380px"
+                      placeholder={selectedEvent.posterLqip ? 'blur' : 'empty'}
+                      blurDataURL={selectedEvent.posterLqip}
                     />
                   ) : (
                     <div className="flex flex-col items-center justify-center h-full gap-3">
