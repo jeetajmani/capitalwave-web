@@ -14,6 +14,9 @@ const query = `*[_type == "talent"] | order(name asc) {
   name,
   genre,
   role,
+  bio,
+  instagram,
+  spotify,
   "photoUrl": photo.asset->url
 }`
 

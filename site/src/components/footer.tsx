@@ -191,7 +191,7 @@ const Footer = () => {
 
                     <div className="flex flex-col sm:flex-row justify-center items-center w-full text-center">
                         <p className="text-xs text-muted-foreground">
-                            Website designed with care by <Link href="https://jeetzingh.com" className="text-blue-500 hover:underline">JEETZINGH</Link>
+                            Website designed with care by <Link href="https://jeetzingh.com" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">JEETZINGH</Link>
                         </p>
                     </div>
                 </div>

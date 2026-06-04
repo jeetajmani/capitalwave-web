@@ -17,7 +17,7 @@ export const talentType = defineType({
       title: 'Role',
       type: 'string',
       options: {
-        list: ['Artist', 'Engineer', 'Videographer'],
+        list: ['Artist', 'Engineer', 'Videographer', 'Management'],
         layout: 'radio',
       },
       validation: (rule) => rule.required(),
@@ -27,6 +27,22 @@ export const talentType = defineType({
       title: 'Genre',
       type: 'string',
       validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: 'bio',
+      title: 'Bio',
+      type: 'text',
+      rows: 4,
+    }),
+    defineField({
+      name: 'instagram',
+      title: 'Instagram Link',
+      type: 'url',
+    }),
+    defineField({
+      name: 'spotify',
+      title: 'Spotify Link',
+      type: 'url',
     }),
     defineField({
       name: 'photo',

@@ -18,11 +18,14 @@ type SanityEvent = {
   type: string
   description?: string
   ticketUrl?: string
-  posterUrl?: string
+  poster?: { asset?: { _ref: string } }
+  posterLqip?: string
 }
 
 const query = `*[_type == "event"] | order(date asc) {
-  _id, title, date, time, venue, type, description, ticketUrl, "posterUrl": poster.asset->url
+  _id, title, date, time, venue, type, description, ticketUrl,
+  poster,
+  "posterLqip": poster.asset->metadata.lqip
 }`
 
 export default async function EventsPage() {
